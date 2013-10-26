@@ -6,10 +6,10 @@
  */
  
 
- $enderecobase=''; 
- $basedados = '';
- $usuariobase= '';
- $senha='';
+ $enderecobase='aa'; 
+ $basedados = 'aa';
+ $usuariobase= 'aa';
+ $senha='aa';
 
 ?>
 
