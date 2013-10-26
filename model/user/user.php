@@ -7,7 +7,8 @@
  
  
  include('./userConfig.php');
- include('./datadb.inc');
+ include('./datadb.php');
+
 
  
  class baseUser{
@@ -202,7 +203,7 @@
 	 		 	
 	 		 	
 	 		 	
-	 		 	
+
 	 		 	//conect in mysql
 				$db=mysql_pconnect($enderecobase,$usuariobase,$senha);
 				if (!$db)
@@ -647,7 +648,8 @@ class completeUser extends baseUser{
 		
 		}
 				
-
+	 		 	echo $usuariobase."<br>";
+	 		 	echo SENHA."<br>";
 		//
 		mysql_selectdb($basedados,$db);
 
@@ -676,7 +678,7 @@ class completeUser extends baseUser{
 												echo $query;
 												
 												/*realiza a consulta*/
-												$result = mysql_query($query) or die('<script type="text/javascript"> alert("Email já cadastrado. Utilize outro.");</script>');								
+												$result = mysql_query($query) or die('<script type="text/javascript"> //alert("Email já cadastrado. Utilize outro.");</script>');								
 							
 		
 		
