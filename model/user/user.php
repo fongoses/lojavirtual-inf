@@ -162,14 +162,14 @@
  		 	
  		 	
  		 	//conect in mysql
-			$db=mysql_pconnect($enderecobase,$usuariobase,$senha);
+			$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
 			if (!$db)
 			{	
 				die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
 			
 			}
 			//
-			mysql_selectdb($basedados,$db);
+			mysql_selectdb(BASEDADOS,$db);
 			
 			$query = sprintf("SELECT * FROM registeredusers WHERE login = '%s' && pass = '%s'",
 																	mysql_real_escape_string($this->login),
@@ -205,7 +205,7 @@
 	 		 	
 
 	 		 	//conect in mysql
-				$db=mysql_pconnect($enderecobase,$usuariobase,$senha);
+				$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
 				if (!$db)
 				{	
 									
@@ -214,7 +214,7 @@
 				
 				}
 				//
-				mysql_selectdb($basedados,$db);
+				mysql_selectdb(BASEDADOS,$db);
 				
 				//charset
 				mysql_query("SET NAMES 'utf8'");
@@ -284,7 +284,7 @@
  		 */
  
  		//conect in mysql
-		$db=mysql_pconnect($enderecobase,$usuariobase,$senha);
+		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
 		if (!$db)
 		{	
 							
@@ -293,7 +293,7 @@
 		
 		}
 		//
-		mysql_selectdb($basedados,$db);
+		mysql_selectdb(BASEDADOS,$db);
 		
 		
 		
@@ -640,19 +640,16 @@ class completeUser extends baseUser{
  		}
  		
  		//conect in mysql		
-		$db=mysql_pconnect($enderecobase,$usuariobase,$senha);
-
+		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
+        
 		if (!$db)
 		{	
 			die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
 		
 		}
 				
-	 		 	echo $usuariobase."<br>";
-	 		 	echo SENHA."<br>";
-		//
-		mysql_selectdb($basedados,$db);
-
+		mysql_selectdb(BASEDADOS,$db);
+		echo BASEDADOS;
 		//charset
 		mysql_query("SET NAMES 'utf8'");
 		mysql_query('SET character_set_connection=utf8');
@@ -678,7 +675,7 @@ class completeUser extends baseUser{
 												echo $query;
 												
 												/*realiza a consulta*/
-												$result = mysql_query($query) or die('<script type="text/javascript"> //alert("Email já cadastrado. Utilize outro.");</script>');								
+												$result = mysql_query($query) or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
 							
 		
 		
