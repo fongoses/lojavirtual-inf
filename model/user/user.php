@@ -6,10 +6,10 @@
  */
  
  
- include('./userConfig.php');
- include('./datadb.php');
+ include('userConfig.php');
+ include('datadb.php');
 
-
+ 
  
  class baseUser{
  	
