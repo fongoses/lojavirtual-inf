@@ -7,7 +7,7 @@
  
  
  include('userConfig.php');
- include('datadb.php');
+ include('datadb.inc');
 
  
  
@@ -649,13 +649,11 @@ class completeUser extends baseUser{
 		}
 				
 		mysql_selectdb(BASEDADOS,$db);
-		echo BASEDADOS;
 		//charset
 		mysql_query("SET NAMES 'utf8'");
 		mysql_query('SET character_set_connection=utf8');
 		mysql_query('SET character_set_client=utf8');
 		mysql_query('SET character_set_results=utf8');
-		$this->echoAllFields();
 		$query = sprintf("INSERT into vendedor (nome,sobrenome,email,senha,rua,numero,cidade,estado,pais,cep,nascimento,cpf) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
 																mysql_real_escape_string($this->getName()),
 																mysql_real_escape_string($this->getCompleteName()),
@@ -672,7 +670,7 @@ class completeUser extends baseUser{
 																
 												
 												
-												echo $query;
+												//echo $query;
 												
 												/*realiza a consulta*/
 												$result = mysql_query($query) or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
