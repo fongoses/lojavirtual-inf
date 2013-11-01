@@ -5,8 +5,6 @@
  * Constantes de usuario e sessao.
  */
  
- $inactiveTime = 30; 
+$inactiveTime = 30; 
   
 ?>
-
-
