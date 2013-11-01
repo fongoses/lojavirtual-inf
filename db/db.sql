@@ -8,6 +8,8 @@ USE `lojavirtual` ;
 -- -----------------------------------------------------
 -- Table `lojavirtual`.`usuario`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lojavirtual`.`usuario` ;
+
 CREATE  TABLE IF NOT EXISTS `lojavirtual`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT ,
   `nome` VARCHAR(45) NULL ,
@@ -32,6 +34,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lojavirtual`.`produto`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lojavirtual`.`produto` ;
+
 CREATE  TABLE IF NOT EXISTS `lojavirtual`.`produto` (
   `idproduto` INT NOT NULL AUTO_INCREMENT ,
   `nome` VARCHAR(45) NULL ,
@@ -51,6 +55,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `lojavirtual`.`produtodovendedor`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lojavirtual`.`produtodovendedor` ;
+
 CREATE  TABLE IF NOT EXISTS `lojavirtual`.`produtodovendedor` (
   `idvendaproduto` INT NOT NULL ,
   `idvendedor` INT NOT NULL ,
@@ -76,6 +82,8 @@ COMMENT = 'Tabela que relaciona o produto de um determinado vendedor. O' /* comm
 -- -----------------------------------------------------
 -- Table `lojavirtual`.`compradocliente`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lojavirtual`.`compradocliente` ;
+
 CREATE  TABLE IF NOT EXISTS `lojavirtual`.`compradocliente` (
   `idcompra` INT NOT NULL AUTO_INCREMENT ,
   `idcliente` INT NOT NULL ,
@@ -101,6 +109,8 @@ COMMENT = 'Tabela que relaciona o produto de um determinado cliente, at' /* comm
 -- -----------------------------------------------------
 -- Table `lojavirtual`.`produtocliente`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `lojavirtual`.`produtocliente` ;
+
 CREATE  TABLE IF NOT EXISTS `lojavirtual`.`produtocliente` (
   `idcliente` INT NOT NULL ,
   `idproduto` INT NOT NULL ,
