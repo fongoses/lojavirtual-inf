@@ -98,8 +98,8 @@ CREATE  TABLE IF NOT EXISTS `lojavirtual`.`compradocliente` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_idcliente`
-    FOREIGN KEY ()
-    REFERENCES `lojavirtual`.`usuario` ()
+    FOREIGN KEY (`idcliente` )
+    REFERENCES `lojavirtual`.`usuario` (`idusuario` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
