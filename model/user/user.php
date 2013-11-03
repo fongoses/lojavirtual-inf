@@ -674,7 +674,7 @@ class completeUser extends baseUser{
  		
  		if(	($this->isEmailEmpty()) || ($this->isPassEmpty()) || ($this->isNameEmpty()))
  		{
- 			echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../../../view/cadastro/"</script>;';
+ 			echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../../view/cadastro/"</script>;';
  			exit;
  			
  		}
