@@ -363,6 +363,9 @@ class completeUser extends baseUser{
 		$this->zip = '';
 		$this->birthday = '';
 		$this->cpf = '';
+		$this->admin = false;
+		$this->seller = false;
+		$this->buyer = false;
  	}
  	
  	
@@ -563,8 +566,41 @@ class completeUser extends baseUser{
  		return empty($this->cpf);	
  		
  	}
-	
-	public function echoAllFields(){
+ 	
+ 	public function getAdmin(){
+ 		
+ 		return $this->admin; 		
+ 		
+ 	} 	
+ 	
+ 	public function setAdmin($flagAdmin){
+ 		$this->admin=$flagAdmin;
+ 		
+ 	}
+ 	
+ 	public function getSeller(){
+ 		
+ 		return $this->seller; 		
+ 		
+ 	} 	
+ 	
+ 	public function setSeller($flagSeller){
+ 		$this->seller=$flagSeller;
+ 		
+ 	}
+ 	
+ 	public function getBuyer(){
+ 		
+ 		return $this->buyer; 		
+ 		
+ 	} 	
+ 	
+ 	public function setBuyer($flagBuyer){
+ 		$this->buyer=$flagBuyer;
+ 		
+ 	}
+ 	
+ 	public function echoAllFields(){
 		echo $this->getName().'<br>';
 		echo $this->getCompleteName().'<br>';
 		echo $this->getEmail().'<br>';
@@ -578,9 +614,10 @@ class completeUser extends baseUser{
 		echo $this->getZip().'<br>';
 		echo $this->getBirthday().'<br>';
 		echo $this->getCpf().'<br>';
+		echo $this->getAdmin().'<br>';
+		echo $this->getSeller().'<br>';
+		echo $this->getBuyer().'<br>';
 		
-
-
 	}
 
  	//obtem dados do formulario de cadastro
@@ -610,6 +647,9 @@ class completeUser extends baseUser{
  		$this->setZip($_POST['cep']);
  		$this->setBirthday($_POST['nascimento']);
 		$this->setCpf($_POST['cpf']);
+		$this->setAdmin($_POST['admin']);
+		$this->setSeller($_POST['comprador']);
+		$this->setBuyer($_POST['vendedor']);
  		
  		
  		
@@ -654,7 +694,7 @@ class completeUser extends baseUser{
 		mysql_query('SET character_set_connection=utf8');
 		mysql_query('SET character_set_client=utf8');
 		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("INSERT into vendedor (nome,sobrenome,email,senha,rua,numero,cidade,estado,pais,cep,nascimento,cpf) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+		$query = sprintf("INSERT into usuario (nome,sobrenome,email,senha,rua,numero,cidade,estado,pais,cep,nascimento,cpf,cliente,vendedor,admin) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
 																mysql_real_escape_string($this->getName()),
 																mysql_real_escape_string($this->getCompleteName()),
 																mysql_real_escape_string($this->getEmail()),
@@ -666,7 +706,10 @@ class completeUser extends baseUser{
 																mysql_real_escape_string($this->getCountry()),	
 																mysql_real_escape_string($this->getZip()),	
 																mysql_real_escape_string($this->getBirthday()),	
-																mysql_real_escape_string($this->getCpf()));
+																mysql_real_escape_string($this->getCpf()),
+																mysql_real_escape_string($this->getAdmin()),
+																mysql_real_escape_string($this->getSeller()),
+																mysql_real_escape_string($this->getBuyer()));
 																
 												
 												
