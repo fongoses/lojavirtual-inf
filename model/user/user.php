@@ -5,10 +5,24 @@
  * 
  */
  
- 
- include('userConfig.php');
- include('datadb.inc');
-
+if(!defined("__USERPHP__")) {
+	define("__USERPHP__", "true");
+	
+	if(!defined("__MVCPATHS__")) {
+	define("__MVCPATHS__", "true");
+	
+		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'lojavirtual';
+	 	$CONTROLLERPATH=$MAINPATH.'/controller';
+	 	$MODELPATH = $MAINPATH.'/model';
+	
+	}
+	
+	
+	include(dirname(__FILE__).'/userConfig.php');	
+	include($MODELPATH.'/infodb/datadb.inc');					
+	include($CONTROLLERPATH.'/errors/errors.php');
+	
+	
  
  
  class baseUser{
@@ -632,9 +646,12 @@ class completeUser extends baseUser{
  		
  		//consistencia de dados eh client-side (via javascript)
  		
-		
-		$this->setPass(md5($_POST['pass'])); //Segurança: criptografa password com md5			
- 		unset($_POST['pass']); //segurança: apaga password
+		if(!empty($_POST['pass'])){
+			$this->setPass(md5($_POST['pass'])); //Segurança: criptografa password com md5			
+ 			unset($_POST['pass']); //segurança: apaga password
+ 			
+		}else $this->setPass('');
+				
 		$this->setEmail($_POST['email']);
  		$this->setName($_POST['nome']);
 		$this->setCompleteName($_POST['sobrenome']);
@@ -650,13 +667,10 @@ class completeUser extends baseUser{
 		$this->setAdmin($_POST['admin']);
 		$this->setSeller($_POST['comprador']);
 		$this->setBuyer($_POST['vendedor']);
- 		
- 		
+ 				
  		
  	}
- 	
- 
- 	
+ 		
  	public function registerUser(){
  		
  		/*
@@ -669,13 +683,13 @@ class completeUser extends baseUser{
  		//get the info from the from in the view filling this instance of class with form contents
  		$this->getRegisterFormFieldsSafely();
  		
- 		
-
- 		
- 		if(	($this->isEmailEmpty()) || ($this->isPassEmpty()) || ($this->isNameEmpty()))
- 		{
- 			echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../../view/cadastro/"</script>;';
- 			exit;
+ 		 		
+ 		if(	($this->isEmailEmpty()) || ($this->isPassEmpty()) || ($this->isNameEmpty())){
+ 			//echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../view/usuario/cadastro/"</script>;';
+ 			//exit; 			
+ 			
+ 			 
+ 			return ERRO__MYSQL__DADOSEMBRANCO;
  			
  		}
  		
@@ -684,8 +698,8 @@ class completeUser extends baseUser{
         
 		if (!$db)
 		{	
-			die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-		
+			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
+			return ERRO__MYSQL__FALHACONEXAO;
 		}
 				
 		mysql_selectdb(BASEDADOS,$db);
@@ -716,24 +730,20 @@ class completeUser extends baseUser{
 												//echo $query;
 												
 												/*realiza a consulta*/
-												$result = mysql_query($query) or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-							
+												$result = mysql_query($query); //or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
+												if(!$result) {											
+													return ERRO__MYSQL__FALHACONEXAO;
+												}
+												else {													
+													return intval($result); //precisa retornar um inteiro;
+												}
+										
 		
 		
 		//echo $result;
  		
  	}	
- 	
- 
- 	
- 	
-	
-	
-	
-	
+ 		
 }
- 
- 
- 
- 
-?>
+
+}?>

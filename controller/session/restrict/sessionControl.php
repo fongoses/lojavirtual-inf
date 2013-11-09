@@ -11,14 +11,27 @@
  
  
  /* --Includes/Imports---------------------------------------------*/
- include("../../../model/user/user.php");
+if(!defined("__SESSIONCONTROLPHP__")) {
+define("__SESSIONCONTROL__", "true");
 
+ if(!defined("__MVCPATHS__")) {
+	define("__MVCPATHS__", "true");
+	
+		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'lojavirtual';
+	 	$CONTROLLERPATH=$MAINPATH.'/controller';
+	 	$MODELPATH = $MAINPATH.'/model';
+	
+ }
  
- /*
- $ALREADY_STARTED_SESSION = -1;
- $INVALID_LOGIN =0;
- $VALID_LOGIN = 1;
- */
+
+
+include($MODELPATH."/user/user.php");
+
+/*
+$ALREADY_STARTED_SESSION = -1;
+$INVALID_LOGIN =0;
+$VALID_LOGIN = 1;
+*/
  
  class sessionControl{
  	
@@ -307,4 +320,4 @@
  }
  
  
-?>
+}?>

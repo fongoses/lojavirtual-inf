@@ -9,7 +9,16 @@
  	
  	
  	/* --Includes/Imports---------------------------------------------*/
- 	include('./sessionControl.php');
+ 	if(!defined("__MVCPATHS__")) {
+	define("__MVCPATHS__", "true");
+	
+		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'lojavirtual';
+	 	$CONTROLLERPATH=$MAINPATH.'/controller';
+	 	$MODELPATH = $MAINPATH.'/model';
+	
+ 	}
+ 	include($CONTROLLERPATH.'/session/restrict/sessionControl.php');
+ 	
  	header('Content-Type: text/html; charset=UTF-8');
  	
   	//echo '<script type="text/javascript"> alert("aaa") </script>'

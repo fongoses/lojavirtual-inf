@@ -15,9 +15,18 @@
  * 
  */
  
- 
- /* --Includes/Imports---------------------------------------------*/ 
- include('./sessionControl.php'); //Classes de usuario e de sessao ja declaradas aqui
+
+ /* --Includes/Imports---------------------------------------------*/
+ if(!defined("__MVCPATHS__")) {
+	define("__MVCPATHS__", "true");
+	
+		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'lojavirtual';
+	 	$CONTROLLERPATH=$MAINPATH.'/controller';
+	 	$MODELPATH = $MAINPATH.'/model';
+	
+ }
+  
+ include($CONTROLLERPATH.'/session/restrict/sessionControl.php'); //Classes de usuario e de sessao ja declaradas aqui
  header('Content-Type: text/html; charset=UTF-8');
  
  

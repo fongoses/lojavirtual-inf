@@ -14,7 +14,8 @@
  
  
  /* --Includes/Imports---------------------------------------------*/ 
- include('./sessionControl.php'); //Classes de usuario e de sessao ja declaradas aqui
+ 
+ include($CONTROLLERPATH.'/session/restrict/sessionControl.php');
  header('Content-Type: text/html; charset=UTF-8');
  
     $base="lojavirtual"; 	
