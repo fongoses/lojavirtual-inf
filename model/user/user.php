@@ -4,12 +4,14 @@
  *Contain classes baseUser and subclass completeUser.
  * 
  */
- 
-if(!defined("__USERPHP__")) {
+
+
+if(!defined("__USERPHP__")) {	
 	define("__USERPHP__", "true");
 	
+
 	if(!defined("__MVCPATHS__")) {
-	define("__MVCPATHS__", "true");
+		define("__MVCPATHS__", "true");
 	
 		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'lojavirtual';
 	 	$CONTROLLERPATH=$MAINPATH.'/controller';
@@ -17,6 +19,7 @@ if(!defined("__USERPHP__")) {
 	
 	}
 	
+
 	
 	include(dirname(__FILE__).'/userConfig.php');	
 	include($MODELPATH.'/infodb/datadb.inc');					
@@ -367,19 +370,15 @@ class completeUser extends baseUser{
  		
  		parent::__construct();
  		//$this->email = '';
- 		$this->name = '';
-		$this->completeName='';
- 		$this->street = '';
-		$this->number = '';
+ 		$this->name = '';		
+ 		$this->address = '';		
 		$this->city = '';		
-		$this->state = '';		
-		$this->country = '';
+		$this->iduf = '';		
+		$this->ifpais = '';
 		$this->zip = '';
 		$this->birthday = '';
 		$this->cpf = '';
-		$this->admin = false;
-		$this->seller = false;
-		$this->buyer = false;
+		$this->admin = false;		
  	}
  	
  	
@@ -405,66 +404,28 @@ class completeUser extends baseUser{
  		
  	}
  	
- 	public function getCompleteName(){
  		
- 		return $this->completeName;
- 		
- 		
- 	} 	
- 	
- 	public function setCompleteName($inputName){
- 		$this->completeName=$inputName;
- 		
- 	}
- 	
- 	public function isCompleteNameEmpty(){
- 		
- 		return empty($this->completeName);	
- 		
- 	}
- 	
 	//
-	public function getStreet(){
+	public function getAddress(){
  		
- 		return $this->street;
+ 		return $this->address;
  		
  		
  	} 	
  	
- 	public function setStreet($inputStreet){
- 		$this->street=$inputStreet;
+ 	public function setAddress($inputAddress){
+ 		$this->address=$inputAddress;
  		
  	}
  	
- 	public function isStreetEmpty(){
+ 	public function isAddressEmpty(){
  		
- 		return empty($this->street);	
+ 		return empty($this->address);	
  		
  	}
 
 	//
 
-	public function getNumber(){
- 		
- 		return $this->number;
- 		
- 		
- 	} 	
- 	
- 	public function setNumber($inputNumber){
- 		$this->number=$inputNumber;
- 		
- 	}
- 	
- 	public function isNumberEmpty(){
- 		
- 		return empty($this->number);	
- 		
- 	}
-
-
-	//
-	
 	public function getCity(){
  		
  		return $this->city;
@@ -484,42 +445,42 @@ class completeUser extends baseUser{
  	}
 
 	//
+
+	public function getIdUf(){
+ 		
+ 		return $this->iduf;
+ 		
+ 		
+ 	} 	
+ 	
+ 	public function setIdUf($inputIdUf){
+ 		$this->iduf=$inputIdUf;
+ 		
+ 	}
+ 	
+ 	public function isIdUfEmpty(){
+ 		
+ 		return empty($this->iduf);	
+ 		
+ 	}
+
+ 	//
 	
-	public function getState(){
+	public function getIdPais(){
  		
- 		return $this->state;
- 		
- 		
- 	} 	
- 	
- 	public function setState($inputState){
- 		$this->state=$inputState;
- 		
- 	}
- 	
- 	public function isStateEmpty(){
- 		
- 		return empty($this->state);	
- 		
- 	}
-
-	//
-
-	public function getCountry(){
- 		
- 		return $this->country;
+ 		return $this->idpais;
  		
  		
  	} 	
  	
- 	public function setCountry($inputCountry){
- 		$this->country=$inputCountry;
+ 	public function setIdPais($inputIdPais){
+ 		$this->idpais=$inputIdPais;
  		
  	}
  	
- 	public function isCountryEmpty(){
+ 	public function isIdPaisEmpty(){
  		
- 		return empty($this->country);	
+ 		return empty($this->idpais);	
  		
  	}
 
@@ -592,45 +553,28 @@ class completeUser extends baseUser{
  		
  	}
  	
- 	public function getSeller(){
+
+ 	public function isAdminEmpty(){
  		
- 		return $this->seller; 		
- 		
- 	} 	
- 	
- 	public function setSeller($flagSeller){
- 		$this->seller=$flagSeller;
+ 		return empty($this->admin);	
  		
  	}
- 	
- 	public function getBuyer(){
- 		
- 		return $this->buyer; 		
- 		
- 	} 	
- 	
- 	public function setBuyer($flagBuyer){
- 		$this->buyer=$flagBuyer;
- 		
- 	}
+ 
  	
  	public function echoAllFields(){
-		echo $this->getName().'<br>';
-		echo $this->getCompleteName().'<br>';
+		echo $this->getName().'<br>';		
 		echo $this->getEmail().'<br>';
 		//echo $this->getPass().'<br>';
 		echo 'Senha <br>';
-		echo $this->getStreet().'<br>';
-		echo $this->getNumber().'<br>';
+		echo $this->getAddress().'<br>';		
 		echo $this->getCity().'<br>';
-		echo $this->getState().'<br>';
-		echo $this->getCountry().'<br>';
+		echo $this->getIdUf().'<br>';
+		echo $this->getIdPais().'<br>';
 		echo $this->getZip().'<br>';
 		echo $this->getBirthday().'<br>';
 		echo $this->getCpf().'<br>';
 		echo $this->getAdmin().'<br>';
-		echo $this->getSeller().'<br>';
-		echo $this->getBuyer().'<br>';
+		
 		
 	}
 
@@ -651,26 +595,24 @@ class completeUser extends baseUser{
  			unset($_POST['pass']); //segurança: apaga password
  			
 		}else $this->setPass('');
-				
+		
+
 		$this->setEmail($_POST['email']);
- 		$this->setName($_POST['nome']);
-		$this->setCompleteName($_POST['sobrenome']);
- 		$this->setName($_POST['nome']);
- 		$this->setStreet($_POST['rua']);
- 		$this->setNumber($_POST['numero']);
+ 		$this->setName($_POST['nome']);		
+ 		$this->setAddress($_POST['endereco']); 		
  		$this->setCity($_POST['cidade']);
- 		$this->setState($_POST['estado']);
- 		$this->setCountry($_POST['pais']);
+ 		$this->setIdUf($_POST['uf']);
+ 		$this->setIdPais($_POST['pais']);
  		$this->setZip($_POST['cep']);
  		$this->setBirthday($_POST['nascimento']);
 		$this->setCpf($_POST['cpf']);
 		$this->setAdmin($_POST['admin']);
-		$this->setSeller($_POST['comprador']);
-		$this->setBuyer($_POST['vendedor']);
- 				
- 		
+		
+
  	}
- 		
+ 	//TODO: 
+ 	//-renomear para save()
+ 	//-
  	public function registerUser(){
  		
  		/*
@@ -684,7 +626,7 @@ class completeUser extends baseUser{
  		$this->getRegisterFormFieldsSafely();
  		
  		 		
- 		if(	($this->isEmailEmpty()) || ($this->isPassEmpty()) || ($this->isNameEmpty())){
+ 		if(	($this->isEmailEmpty()) || ($this->isPassEmpty()) || ($this->isNameEmpty()) || ($this->isIdUfEmpty()) || ($this->isIdPaisEmpty())   ){
  			//echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../view/usuario/cadastro/"</script>;';
  			//exit; 			
  			
@@ -708,26 +650,24 @@ class completeUser extends baseUser{
 		mysql_query('SET character_set_connection=utf8');
 		mysql_query('SET character_set_client=utf8');
 		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("INSERT into usuario (nome,sobrenome,email,senha,rua,numero,cidade,estado,pais,cep,nascimento,cpf,cliente,vendedor,admin) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
-																mysql_real_escape_string($this->getName()),
-																mysql_real_escape_string($this->getCompleteName()),
+		$query = sprintf("INSERT into usuario (nome,email,senha,endereco,cidade,iduf,idpais,cep,nascimento,cpf,admin) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+																mysql_real_escape_string($this->getName()),																
 																mysql_real_escape_string($this->getEmail()),
 																mysql_real_escape_string($this->getPass()),
-																mysql_real_escape_string($this->getStreet()),	
-																mysql_real_escape_string($this->getNumber()),	
+																mysql_real_escape_string($this->getAddress()),																
 																mysql_real_escape_string($this->getCity()),	
-																mysql_real_escape_string($this->getState()),	
-																mysql_real_escape_string($this->getCountry()),	
+																mysql_real_escape_string($this->getIdUf()),
+																mysql_real_escape_string($this->getIdPais()),	
 																mysql_real_escape_string($this->getZip()),	
 																mysql_real_escape_string($this->getBirthday()),	
 																mysql_real_escape_string($this->getCpf()),
-																mysql_real_escape_string($this->getAdmin()),
-																mysql_real_escape_string($this->getSeller()),
-																mysql_real_escape_string($this->getBuyer()));
+																mysql_real_escape_string($this->getAdmin()));
+																
+																
 																
 												
 												
-												//echo $query;
+												echo $query;
 												
 												/*realiza a consulta*/
 												$result = mysql_query($query); //or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								

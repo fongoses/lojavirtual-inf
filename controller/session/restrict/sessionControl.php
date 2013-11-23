@@ -12,7 +12,7 @@
  
  /* --Includes/Imports---------------------------------------------*/
 if(!defined("__SESSIONCONTROLPHP__")) {
-define("__SESSIONCONTROL__", "true");
+define("__SESSIONCONTROLPHP__", "true");
 
  if(!defined("__MVCPATHS__")) {
 	define("__MVCPATHS__", "true");
@@ -99,7 +99,7 @@ $VALID_LOGIN = 1;
  		 */
  		
  		@session_start(); //em cada script eh necessario chamar session_start para manipular as vars da sessao. '@' nao exibe warning de 'sessao ja existe'
- 		//se não existe sessao ativa, loga
+ 		//se nÃ£o existe sessao ativa, loga
  		
 		if (!isset($_SESSION['sessionControl'])) {
 		
@@ -206,7 +206,7 @@ $VALID_LOGIN = 1;
 		 
 				//obtem dados do formulario
 				$loginUser->setEmail($_POST['loginEmailField']);
-				$loginUser->setPass(md5($_POST['loginPassField'])); //Seguran�a: criptografa password com md5
+				$loginUser->setPass(md5($_POST['loginPassField'])); //Seguranï¿½a: criptografa password com md5
 				//nao dar unset no $_POST['loginPassField'] ainda pois ele eh utilizado mais adiante em sessionControl->loginUser()
 		 		
 			 	
@@ -284,13 +284,13 @@ $VALID_LOGIN = 1;
  						} else{exit();}
  					
  					
- 					//echo '<script type="text/javascript"> alert("Falha na conexão com o sistema!'.$loggedUser->getPass().'Tente novamente!");location.href="../../login.php"</script>';exit;
+ 					//echo '<script type="text/javascript"> alert("Falha na conexÃ£o com o sistema!'.$loggedUser->getPass().'Tente novamente!");location.href="../../login.php"</script>';exit;
 					
 					/*valida*/
 				 	switch($loggedUser->validateUser()){
 				 		
-				 		case -1: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("Falha na conexão com o sistemaa! Tente novamente!");location.href="../../../home"</script>';exit;
-				 		case 0: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("Usuário ou senha inváalidos! Tente novamente!");location.href="../../../home"</script>';exit;
+				 		case -1: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("Falha na conexÃ£o com o sistemaa! Tente novamente!");location.href="../../../home"</script>';exit;
+				 		case 0: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("UsuÃ¡rio ou senha invÃ¡alidos! Tente novamente!");location.href="../../../home"</script>';exit;
 				 		case 1: break; //case sucessfull(user exists), do nothing, just let the rest of the page loads
 				 						//Consideration: here, we expect that user already logged in the session and $_SESSION['user'] var already is set with all user data(Which is supposed to happen in the user's login, sessionControl->loginUser())
 				 	}	
@@ -302,7 +302,7 @@ $VALID_LOGIN = 1;
 				 	
 				 	
 						 	//exibe alerta e redireciona
-						 	echo '<script type="text/javascript"> alert("Você não está logado.");location.href="../../../home"</script>;';	
+						 	echo '<script type="text/javascript"> alert("VocÃª nÃ£o estÃ¡ logado.");location.href="../../../home"</script>;';	
 						   	exit(); 
 						   	
 			}

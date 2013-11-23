@@ -13,13 +13,15 @@
 	 	$MODELPATH = $MAINPATH.'/model';
 		
 	}
+ 	 	
+
+ 	/* --Includes/Imports---------------------------------------------*/ 	
  	
- 	
- 	/* --Includes/Imports---------------------------------------------*/
- 	include($CONTROLLERPATH.'/session/restrict/sessionControl.php'); 	
- 	include($MODELPATH.'/model/user/user.php');
+ 	include($CONTROLLERPATH.'/session/restrict/sessionControl.php');  	
  	include($CONTROLLERPATH.'/errors/errors.php');
+ 	include($MODELPATH.'/user/user.php');
  	
+
  	header('Content-Type: text/html; charset=UTF-8');
  	
   	//echo '<script type="text/javascript"> alert("aaa") </script>'

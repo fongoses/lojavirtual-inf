@@ -150,7 +150,7 @@ class produto {
  	
  	public function isQuantidadeEmpty(){
  		
- 		return empty($this->quantidade);	
+ 		return empty($this->quantidade) && ($this->quantidade == 0);	
  		
  	}
 
@@ -350,45 +350,56 @@ class produto {
  			//exit;
  			
  		}
- 		
- 		//conect in mysql		
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-        
-		if (!$db){	
-			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-			return ERRO__MYSQL__FALHACONEXAO;
-		}
+ 		 			
+		
+		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+			
+			// inicia a transacao
+			$db->beginTransaction();
+
+				$query1 = sprintf("INSERT into produto (nome,descricao,quantidade,preco,linkfoto,datainicio,datatermino,tamanholote,precolote,validadeaposcompra) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+																		mysql_real_escape_string($this->getNome()),
+																		mysql_real_escape_string($this->getDescricao()),
+																		mysql_real_escape_string($this->getQuantidade()),
+																		mysql_real_escape_string($this->getPreco()),
+																		mysql_real_escape_string($this->getLinkFoto()),	
+																		mysql_real_escape_string($this->getDataInicio()),	
+																		mysql_real_escape_string($this->getDataTermino()),	
+																		mysql_real_escape_string($this->getTamanhoLote()),	
+																		mysql_real_escape_string($this->getPrecoLote()),	
+																		mysql_real_escape_string($this->getValidadeAposCompra()));
+																		
 				
-		mysql_selectdb(BASEDADOS,$db);
-		//charset
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query('SET character_set_connection=utf8');
-		mysql_query('SET character_set_client=utf8');
-		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("INSERT into produto (nome,descricao,quantidade,preco,linkfoto,datainicio,datatermino,tamanholote,precolote,validadeaposcompra) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
-																mysql_real_escape_string($this->getNome()),
-																mysql_real_escape_string($this->getDescricao()),
-																mysql_real_escape_string($this->getQuantidade()),
-																mysql_real_escape_string($this->getPreco()),
-																mysql_real_escape_string($this->getLinkFoto()),	
-																mysql_real_escape_string($this->getDataInicio()),	
-																mysql_real_escape_string($this->getDataTermino()),	
-																mysql_real_escape_string($this->getTamanhoLote()),	
-																mysql_real_escape_string($this->getPrecoLote()),	
-																mysql_real_escape_string($this->getValidadeAposCompra()));
-																
-												
-												
-												//echo $query;
-												
-												/*realiza a consulta*/
-												$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-												if(!$result) {
-													return ERRO__MYSQL__FALHACONEXAO;
-												}
-												else {													
-													return intval($result);
-												}
+			    //Insere. Funcao retorna o numero de linhas afetadas			    
+			    $count = $db->exec($query1);
+
+			    $idProdutoCadastrado = $db->lastInsertId();
+			    $idVendedor=1; //obter esse valor da sessao
+
+			    
+			    $query2 = sprintf("INSERT into produto_vendedor (idvendedor,idproduto,datacadastro) VALUES (%d,%d,NOW())",
+																		$idVendedor,
+																		$idProdutoCadastrado);
+				echo $query2;
+			    $count = $db->exec($query2);			
+			    
+
+		    $db->commit();//finaliza transacao
+		    $db = null;//fecha conexao
+
+		    return 1; //1:sucesso
+
+		} catch (Exception $e) {
+		    
+		    $db->rollback(); //rollback em caso de falha
+		    return ERRO__MYSQL__FALHACONEXAO;
+
+		}
+
+
 	}
 	
 	
@@ -403,8 +414,8 @@ class produto {
  		
  		
  		
- 		if( ($this-isIdProdutoEmpty) ||	($this->isNomeEmpty()) || ($this->isPrecoEmpty()) || ($this->isQuantidadeEmpty())){
- 			return -1;
+ 		if( ($this->isIdProdutoEmpty()) ||	($this->isNomeEmpty()) || ($this->isPrecoEmpty()) || ($this->isQuantidadeEmpty())){
+ 			return ERRO__MYSQL__DADOSEMBRANCO;;
  			//echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../../view/cadastro/"</script>;';
  			//exit;
  			
@@ -448,13 +459,16 @@ class produto {
 	}
 	
 	
-	public function select(){
+	public function select($code){
  		
  		/*
  		 * Select Product in the Database.
  		 * The info used is the info present in this class, which means this
  		 * method expect the user to fill some/all fields of this class before
  		 * calling this method.
+
+ 		 * if $code == 0, then this function returns all available products as a buyer.
+ 		 * if $code == 1, then this function returns all available products as a seller. 		 
  		 * 
  		 * If there is no info in this class (all fields are blank), this method shall return -1;
  		 * If there is no data in the database associated with the given info to this class, this method shall return -1;
@@ -464,54 +478,70 @@ class produto {
  		
  		
  		if($this->allFieldsEmpty()) {
- 			return -1;
+ 			return ERRO__MYSQL__DADOSEMBRANCO;;
  			//echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../../view/cadastro/"</script>;';
  			//exit;
  			
  		}
  		
- 		//conect in mysql		
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-        
-		if (!$db){	
-			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-			return -1;
-		}
-				
-		mysql_selectdb(BASEDADOS,$db);
-		//charset
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query('SET character_set_connection=utf8');
-		mysql_query('SET character_set_client=utf8');
-		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("SELECT * from produto WHERE nome = '%s' && descricao='%s' && quantidade ='%s'&& preco='%s' && linkfoto='%s' && datainicio='%s && datatermino='%s' && tamanholote='%s' && precolote='%s' && validadeaposcompra='%s')",
-																mysql_real_escape_string($this->getNome()),
-																mysql_real_escape_string($this->getDescricao()),
-																mysql_real_escape_string($this->getQuantidade()),
-																mysql_real_escape_string($this->getPreco()),
-																mysql_real_escape_string($this->getLinkFoto()),	
-																mysql_real_escape_string($this->getDataInicio()),	
-																mysql_real_escape_string($this->getDataTermino()),	
-																mysql_real_escape_string($this->getTamanhoLote()),	
-																mysql_real_escape_string($this->getPrecoLote()),	
-																mysql_real_escape_string($this->getValidadeAposCompra()));
-																
-												
-												
-												//echo $query;
-												
-												/*realiza a consulta*/
-												$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-												if(!$result) return -1;
-												else {
-													
-													/*while($row = mysql_fetch_assoc($result)){
-														echo row['nome'];
-														echo row['descricao'];
-													}*/
-														
-													return $result;
-												}
+ 		try {
+
+			//charset
+			/*ignorada pelo PDO
+			mysql_query("SET NAMES 'utf8'");
+			mysql_query('SET character_set_connection=utf8');
+			mysql_query('SET character_set_client=utf8');
+			mysql_query('SET character_set_results=utf8');*/
+
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+			
+			$idUsuario=1; //obter esse valor da sessao
+			//join eh prod carteziano
+			if (!$code) 
+				$query = sprintf("SELECT * from produto_cliente pc NATURAL JOIN produto p WHERE pc.idcliente = %d ",$idUsuario);
+			else
+				$query = sprintf("SELECT * from produto_vendedor pv NATURAL JOIN produto p WHERE pv.idvendedor = %d ",$idUsuario);
+			
+			if(!$this->isIdProdutoEmpty())
+				$query .=  sprintf("AND p.idproduto = %d ",$this->getIdProduto());
+			if(!$this->isNomeEmpty())
+				$query .=  sprintf("AND p.nome = '%s' ",mysql_real_escape_string($this->getNome()));
+			if(!$this->isDescricaoEmpty())
+				$query .= sprintf("AND p.descricao = '%s' ",mysql_real_escape_string($this->getDescricao()));
+			if(!$this->isQuantidadeEmpty())
+				$query .= sprintf("AND p.quantidade = %d ",intval(mysql_real_escape_string($this->getQuantidade())));
+			if(!$this->isPrecoEmpty())
+				$query .= sprintf("AND p.preco = '%s' ",mysql_real_escape_string($this->getPreco()));
+			if(!$this->isLinkFotoEmpty())
+				$query .= sprintf("AND p.linkfoto = 's%' ",mysql_real_escape_string($this->getLinkFoto()));
+			if(!$this->isDataInicioEmpty())
+				$query .= sprintf("AND p.datainicio = '%s' ",mysql_real_escape_string($this->getDataInicio()));
+			if(!$this->isDataTerminoEmpty())
+				$query .= sprintf("AND p.datatermino = '%s' ",mysql_real_escape_string($this->getDataTermino()));
+			if(!$this->isTamanhoLoteEmpty())
+				$query .= sprintf("AND p.tamanholote = '%s' ",mysql_real_escape_string($this->getTamanhoLote()));	
+			if(!$this->isPrecoLoteEmpty())
+				$query .= sprintf("AND p.precolote = '%s' ",mysql_real_escape_string($this->getPrecoLote()));	
+			if(!$this->isValidadeAposCompraEmpty())
+				$query .= sprintf("AND p.validadeaposcompra = '%s' ",mysql_real_escape_string($this->getValidadeAposCompra()));
+			
+			//Insere. Funcao retorna o numero de linhas afetadas			    
+		    $result = $db->query($query);
+		    
+		    $db = null;//fecha conexao
+
+		    if (!$result)
+		    	return -1;
+		    else return $result;
+
+		} catch (Exception $e) {
+		    
+		    $db->rollback(); //rollback em caso de falha
+		    return ERRO__MYSQL__FALHACONEXAO;
+
+		}								
+		
 	}
 	
 	
@@ -566,11 +596,11 @@ class produto {
 	/* Metodos uteis para manipulacao da base de dados de produtos*/
 	
 	
-	public function selectUserProducts(){
+	public function selectBuyerProducts(){
 		
  		
  		/*
- 		 * Select all the Products of the current user, from the Database.
+ 		 * Select all the bought Products  of the current user, from the Database.
  		 * The info used is the info present in this class, which means this
  		 * method expect the user to fill some/all fields of this class before
  		 * calling this method.
@@ -582,39 +612,74 @@ class produto {
  		 */
  		
  		
- 		if($this->isNomeEmpty()) {
- 			return -1;
- 			//echo '<script type="text/javascript"> alert("Preencha todos os dados do formulário");location.href="../../../view/cadastro/"</script>;';
- 			//exit;
- 			
- 		}
- 		
- 		//conect in mysql		
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-        
-		if (!$db){	
-			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-			return -1;
-		}
-				
-		mysql_selectdb(BASEDADOS,$db);
-		//charset
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query('SET character_set_connection=utf8');
-		mysql_query('SET character_set_client=utf8');
-		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("SELECT * from produto WHERE nome = '%s'",		
-												mysql_real_escape_string($this->getNome()));
-		
-												//echo $query;
+ 		//adicionar assim que acrescentarmos sessao com usuario
+ 		//if(empty($_SESSION['usuario'].id)) return -1;
+ 		//$idUsuario=$_SESSION['usuario'].id;
+ 		$idUsuario=1;
+
+		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+
+			$query = sprintf("SELECT p.* from produto_cliente pc NATURAL JOIN produto p on pc.idcliente = %d ",$idUsuario);
+		    //Insere. Funcao retorna o numero de linhas afetadas			    
+		    $result = $db->query($query);		    
+		    
+		    $db = null;//fecha conexao
+		    if (!$result) 
+		    	return -1;
+		    else return $result;
+
+		} catch (Exception $e) {
+		    return ERRO__MYSQL__FALHACONEXAO;
+		}		
 												
-												/*realiza a consulta*/
-												$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-												if(!$result) return -1;
-												else {
-													return $result;
-												}
 	}
+
+	public function selectSellerProducts(){
+		
+ 		
+ 		/*
+ 		 * Select all the selling Products of the current user, from the Database.
+ 		 * The info used is the info present in this class, which means this
+ 		 * method expect the user to fill some/all fields of this class before
+ 		 * calling this method.
+ 		 * 
+ 		 * If there is no info in this class (all fields are blank), this method shall return -1;
+ 		 * If there is no data in the database associated with the given info to this class, this method shall return -1;
+ 		 * 
+ 		 * On successfull, this method returns the result of the query (an array of all the rows matching the given info)
+ 		 */
+ 		
+ 		
+ 		//adicionar assim que acrescentarmos sessao com usuario
+ 		//if(empty($_SESSION['usuario'].id)) return -1;
+ 		//$idUsuario=$_SESSION['usuario'].id;
+ 		$idUsuario=1;
+
+		try {
+						
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+
+			//obs, join nao esta retornando id do usuario(apenas os campos de produto)
+			$query = sprintf("SELECT p.* from produto_vendedor pv NATURAL JOIN produto p WHERE pv.idvendedor = %d",$idUsuario);
+		    
+		    $result = $db->query($query);		    
+		    
+		    $db = null;//fecha conexao
+		    if (!$result)
+		    	return -1;
+		    else return $result;
+
+		} catch (Exception $e) {
+		    return ERRO__MYSQL__FALHACONEXAO;
+		}
+
+		
+												
+	}
+
 	
 	public function selectAllProducts(){
 		
@@ -632,31 +697,25 @@ class produto {
  		 */
  		
  		
- 		 		
- 		//conect in mysql		
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-        
-		if (!$db){	
-			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-			return -1;
+		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+
+			$query = "SELECT * from produto";
+		    //Insere. Funcao retorna o numero de linhas afetadas			    
+		    $result = $db->query($query);		    
+		    
+		    $db = null;//fecha conexao
+		    if (!$result) 
+		    	return -1;
+		    else return $result;
+
+		} catch (Exception $e) {
+		    return ERRO__MYSQL__FALHACONEXAO;
 		}
-				
-		mysql_selectdb(BASEDADOS,$db);
-		//charset
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query('SET character_set_connection=utf8');
-		mysql_query('SET character_set_client=utf8');
-		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("SELECT * from produto ");
+
 		
-		//echo $query;
-		
-		/*realiza a consulta*/
-		$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-		if(!$result) return -1;
-		else {
-			return $result;
-		}
 	}
 	
 	

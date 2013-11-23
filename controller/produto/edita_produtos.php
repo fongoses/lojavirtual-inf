@@ -16,29 +16,35 @@
  	
  	/* --Includes/Imports---------------------------------------------*/
  	include($CONTROLLERPATH.'/session/restrict/sessionControl.php');
- 	include($CONTROLLERPATH.'/errors/errors.php'); 	 	
+ 	include($CONTROLLERPATH.'/errors/errors.php');
  	include($MODELPATH.'/model/produto/produto.php');
- 	
- 	
+ 	 	
  	header('Content-Type: text/html; charset=UTF-8');
  	
   	//echo '<script type="text/javascript"> alert("aaa") </script>'
  	/* --Methods-----------------------------------------------------*/
  	
  	$produto = new produto();
- 	//$produto->setNome("Bola");
- 	$resultado= $produto->selectAllProducts();
  	
+ 	$produto->getFormFields();
  	
- 	echo "Produtos<br><hr>";
- 	while($cadaProduto = mysql_fetch_assoc($resultado))												
-			echo $cadaProduto['nome']. " - ". $cadaProduto['quantidade']." - ".$cadaProduto['preco']."<br>";			
-	
+ 	$resultado = $produto->update();
  	
+ 	 	
+	if($resultado == ERRO__MYSQL__DADOSEMBRANCO){		 			
+ 		echo '<script type="text/javascript"> alert("Produto inexistente");location.href="../../view/produto/visualizacao/"</script>;';
+ 		return;
+ 	}
  	
-	
-	
- 
- 
+ 	if($resultado == ERRO__MYSQL__FALHACONEXAO){
+ 		echo '<script type="text/javascript"> alert("Falha na conexão");location.href="../../view/produto/visualizacao/"</script>;';
+ 		return;
+ 	} 	
+ 	
+ 	if ($resultado > 0) {
+		echo '<script type="text/javascript"> alert("Alteração realizada com sucesso!");location.href="../../view/produto/visualizacao/"</script>;';
+		return;
+	}
+ 	
 ?>
 

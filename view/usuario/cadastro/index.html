@@ -1,79 +1,64 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-	
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	
-	<!-- Carrega Scripts -->
-	<!-- <script src="../../js/jquery-1.4.2.min.js" type="text/javascript"></script> -->
-	<!-- <script src="js/mainClass.js" type="text/javascript" ></script>
-	<script src="js/documentReady.js" type="text/javascript" ></script> -->
-	<!-- --------------- -->
-	
-	
-	
-	<!-- -------------------------------------------------------- -->
-	<!-- Script para execução das funções das classes ----------- -->	
-	<script type="text/javascript" >
-	/*
-		
-			
-			Tudo no documentReady.js
-			
-		
-	*/
-	</script>
-	
-	
-	
-	<!-- -------------------------------------------------------- -->
-    <!-- StyleSheets -------------------------------------------- -->
-    <!--<link rel="stylesheet" type="text/css" href="css/mainStyle.css"></link>-->
-	
-	
-	
-	
-	<title>Cadastro</title>
+       
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css"></link>
+    
+
+    <!-- Carrega Scripts -->
+    <script src="../../js/jquery.js" type="text/javascript"></script> 
+    <script src="../../js/bootstrap.min.js" type="text/javascript"></script> 
+    
+    <script src="documentReady.js" type="text/javascript" ></script> 
+       
+       
+       
+       
+       
+       
+<title>Cadastro</title>
 </head>
+
 <body>
 
-
-	
-	
-	<h1><u>Faça seu cadastro</u></h1>
-
-
-	<form id='formCadastro' action='../../../controller/usuario/cadastra_usuario.php' method='post'>
+        <div class="modal fade" id='modalWindow'>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Faça seu cadastro</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id='formCadastro' action='../../../controller/usuario/cadastra_usuario.php' method='post'>
 		
-		Nome*:<br><input type='text' name='nome'/><br>
-		Sobrenome:<br><input type='text' name='sobrenome'/><br>
-		Email*:<br><input type='text' name='email'/><br>
-		Senha*:<br><input type='password' name='pass'/><br>
-		Rua:<br><input type='text' name='rua'/><br>
-		Numero:<br><input type='text' name='numero'/><br>
-		Cidade:<br><input type='text' name='cidade'/><br>
-		Estado:<br><input type='text' name='estado'/><br>
-		Pais:<br><input type='text' name='pais'/><br>
-		Cep:<br><input type='text' name='cep'/><br>
-		Nascimento:<br><input type='text' name='nascimento'/><br>
-		Cpf:<br><input type='text' name='cpf'/><br>
-		<input type="checkbox" name="admin">Admin<br>
-		<input type="checkbox" name="vendedor">Vendedor<br>
-		<input type="checkbox" name="comprador">Comprador<br>		
-		<br><br>
-		<input type='submit' value= "Enviar">
+							Nome*:<br><input type='text' name='nome'/><br>		
+							Email*:<br><input type='text' name='email'/><br>
+							Senha*:<br><input type='password' name='pass'/><br>
+							Endereco:<br><input type='text' name='endereco'/><br>		
+							Cidade:<br><input type='text' name='cidade'/><br>
+							UF*:<br><input type='text' name='uf'/><br>
+							Pais*:<br><input type='text' name='pais'/><br>
+							Cep:<br><input type='text' name='cep'/><br>
+							Nascimento:<br><input type='text' name='nascimento'/><br>
+							Cpf:<br><input type='text' name='cpf'/><br>	
 
+						</form>	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick='document.getElementById("formCadastro").submit();'>Cadastrar</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
-
-	</form>	
-			
-	
-	
-	
-	
-	
 	
 
+	
+	
 
 
 </body>
