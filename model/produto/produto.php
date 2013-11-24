@@ -24,7 +24,7 @@ define("__PRODUTOPHP__", "true");
  	/* --Includes/Imports---------------------------------------------*/
  	
  	include($CONTROLLERPATH.'/errors/errors.php');
-	include(dirname(__FILE__).'/configProduto.php');
+	include($MODELPATH.'/produto/configProduto.php');
 	include($MODELPATH.'/infodb/datadb.inc');
 	
 	
@@ -357,10 +357,7 @@ class produto {
 			//conecta na base base
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 			
-			// inicia a transacao
-			$db->beginTransaction();
-
-				$query1 = sprintf("INSERT into produto (nome,descricao,quantidade,preco,linkfoto,datainicio,datatermino,tamanholote,precolote,validadeaposcompra) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
+			$query1 = sprintf("INSERT into produto (nome,descricao,quantidade,preco,linkfoto,datainicio,datatermino,tamanholote,precolote,validadeaposcompra) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')",
 																		mysql_real_escape_string($this->getNome()),
 																		mysql_real_escape_string($this->getDescricao()),
 																		mysql_real_escape_string($this->getQuantidade()),
@@ -373,17 +370,20 @@ class produto {
 																		mysql_real_escape_string($this->getValidadeAposCompra()));
 																		
 				
-			    //Insere. Funcao retorna o numero de linhas afetadas			    
+			$query2 = sprintf("INSERT into produto_vendedor (idvendedor,idproduto,datacadastro) VALUES (%d,%d,NOW())",
+																		$idVendedor,
+																		$idProdutoCadastrado);
+
+			// inicia a transacao
+			$db->beginTransaction();
+
+				
+			    //Insere. Funcao exec retorna o numero de linhas afetadas			    
 			    $count = $db->exec($query1);
 
 			    $idProdutoCadastrado = $db->lastInsertId();
 			    $idVendedor=1; //obter esse valor da sessao
-
 			    
-			    $query2 = sprintf("INSERT into produto_vendedor (idvendedor,idproduto,datacadastro) VALUES (%d,%d,NOW())",
-																		$idVendedor,
-																		$idProdutoCadastrado);
-				echo $query2;
 			    $count = $db->exec($query2);			
 			    
 
@@ -421,41 +421,38 @@ class produto {
  			
  		}
  		
- 		//conect in mysql		
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-        
-		if (!$db){
-			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-			return -1;
-		}
-				
-		mysql_selectdb(BASEDADOS,$db);
-		//charset
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query('SET character_set_connection=utf8');
-		mysql_query('SET character_set_client=utf8');
-		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("UPDATE produto SET produto.nome= '%s',produto.descricao='%s',produto.quantidade='%s',produto.preco='%s',produto.linkfoto='%s',produto.datainicio='%s',produto.datatermino='%s',produto.tamanholote='%s',produto.precolote='%s',produto.validadeaposcompra='%s') WHERE idproduto='%s'",
-																mysql_real_escape_string($this->getNome()),
-																mysql_real_escape_string($this->getDescricao()),
-																mysql_real_escape_string($this->getQuantidade()),
-																mysql_real_escape_string($this->getPreco()),
-																mysql_real_escape_string($this->getLinkFoto()),	
-																mysql_real_escape_string($this->getDataInicio()),	
-																mysql_real_escape_string($this->getDataTermino()),	
-																mysql_real_escape_string($this->getTamanhoLote()),	
-																mysql_real_escape_string($this->getPrecoLote()),	
-																mysql_real_escape_string($this->getValidadeAposCompra()),
-																mysql_real_escape_string($this->getIdProduto));
-																
-												
-												
-												//echo $query;
-												
-												/*realiza a consulta*/
-												$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-												if(!$result) return -1;
-												else return 1;
+
+		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+			
+			
+
+			$query = sprintf("UPDATE produto SET produto.nome= '%s',produto.descricao='%s',produto.quantidade='%s',produto.preco='%s',produto.linkfoto='%s',produto.datainicio='%s',produto.datatermino='%s',produto.tamanholote='%s',produto.precolote='%s',produto.validadeaposcompra='%s' WHERE idproduto='%d'",
+															mysql_real_escape_string($this->getNome()),
+															mysql_real_escape_string($this->getDescricao()),
+															mysql_real_escape_string($this->getQuantidade()),
+															mysql_real_escape_string($this->getPreco()),
+															mysql_real_escape_string($this->getLinkFoto()),	
+															mysql_real_escape_string($this->getDataInicio()),	
+															mysql_real_escape_string($this->getDataTermino()),	
+															mysql_real_escape_string($this->getTamanhoLote()),	
+															mysql_real_escape_string($this->getPrecoLote()),	
+															mysql_real_escape_string($this->getValidadeAposCompra()),
+															$this->getIdProduto());
+
+		    
+		    $count = $db->exec($query);
+		   
+		    $db = null;
+
+		    return 1; 
+
+		} catch (Exception $e) {
+		    return ERRO__MYSQL__FALHACONEXAO;
+		}		
+		
 	}
 	
 	
@@ -486,18 +483,12 @@ class produto {
  		
  		try {
 
-			//charset
-			/*ignorada pelo PDO
-			mysql_query("SET NAMES 'utf8'");
-			mysql_query('SET character_set_connection=utf8');
-			mysql_query('SET character_set_client=utf8');
-			mysql_query('SET character_set_results=utf8');*/
-
-			//conecta na base base
+			
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 			
 			$idUsuario=1; //obter esse valor da sessao
-			//join eh prod carteziano
+
+			//join eh prod carteziano, ja natural join eh o natural join, de fato
 			if (!$code) 
 				$query = sprintf("SELECT * from produto_cliente pc NATURAL JOIN produto p WHERE pc.idcliente = %d ",$idUsuario);
 			else
@@ -526,7 +517,7 @@ class produto {
 			if(!$this->isValidadeAposCompraEmpty())
 				$query .= sprintf("AND p.validadeaposcompra = '%s' ",mysql_real_escape_string($this->getValidadeAposCompra()));
 			
-			//Insere. Funcao retorna o numero de linhas afetadas			    
+			
 		    $result = $db->query($query);
 		    
 		    $db = null;//fecha conexao
@@ -536,8 +527,7 @@ class produto {
 		    else return $result;
 
 		} catch (Exception $e) {
-		    
-		    $db->rollback(); //rollback em caso de falha
+
 		    return ERRO__MYSQL__FALHACONEXAO;
 
 		}								
@@ -554,42 +544,43 @@ class produto {
  		 */
  		
  		
- 		if($this->isIdProdutoEmpty) {
- 			return -1;
- 			 			
+ 		if($this->isIdProdutoEmpty()) {
+ 			return -1; 			 			
  		}
- 		
- 		//conect in mysql		
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-        
-		if (!$db){	
-			//die('<h1>Nao foi possivel conectar a base de dados</h1>'.mysql_error());
-			return -1;
-		}
+
+
+ 		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+			
+			$query1 = sprintf("delete from produto_vendedor WHERE idproduto = '%d'",
+												$this->getIdProduto());
+
+
+			$query2 = sprintf("delete from produto_vendedor WHERE idproduto = '%d'",
+												$this->getIdProduto());
+
+			// inicia a transacao
+			$db->beginTransaction();
 				
-		mysql_selectdb(BASEDADOS,$db);
-		//charset
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query('SET character_set_connection=utf8');
-		mysql_query('SET character_set_client=utf8');
-		mysql_query('SET character_set_results=utf8');
-		$query = sprintf("delete from produto WHERE idproduto = '%s'",
-												mysql_real_escape_string($this->getIdProduto()));
-												
-												//echo $query;
-												
-												/*realiza a consulta*/
-												$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
-												if(!$result) return -1;
-												else {
-													
-													/*while($row = mysql_fetch_assoc($result)){
-														echo row['nome'];
-														echo row['descricao'];
-													}*/
-														
-													return $result;
-												}
+
+		    
+		    	
+		    	$count1 = $db->exec($query1);
+		    	$count2 = $db->exec($query2);
+
+		   	$db->commit();//finaliza transacao		   		   	
+
+		    $db = null;//fecha conexao
+
+		    return 1; //1:sucesso
+
+		} catch (Exception $e) {
+		    return ERRO__MYSQL__FALHACONEXAO;
+		}
+ 		
+ 		
 	}
 	
 	

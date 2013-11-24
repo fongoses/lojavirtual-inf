@@ -4,8 +4,8 @@
  *  
 */
 
-if(!define("__ERRORSPHP__")){
-	define("__ERRORSPHP__"."true");
+if(!defined("__ERRORSPHP__")){
+	define("__ERRORSPHP__","true");
 	
 	define("ERRO__MYSQL__DADOSEMBRANCO",-27);
 	define("ERRO__MYSQL__FALHACONEXAO",-26);	

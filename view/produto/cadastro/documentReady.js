@@ -1,9 +1,5 @@
-$(document).ready(function(){
-	
+$(document).ready(function(){	
 
-	//$('#modalWindow').modal('show');
-	$('#modalWindow').alert('show');
-
-
+	$('#modalWindow').modal('show');
 
 });

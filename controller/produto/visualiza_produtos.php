@@ -50,7 +50,13 @@
     			"<td>".
 				"<form name='productEditForm' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">".
 						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
-    					"<input type=submit value=\"Editar\">".
+    					"<input type=submit value=\"Atualizar\">".
+    			"</form>".
+    			"</td>".
+    			"<td>".
+				"<form name='productEditForm' method=post action=\"../../../controller/produto/deleta_produto.php\">".
+						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
+    					"<input type=submit value=\"Apagar\">".
     			"</form>".
     			"</td>".
     			"</tr>".
@@ -58,15 +64,27 @@
 					
 
 	echo "<br><h2>Produtos Comprados:</h2><hr>";
- 	foreach ($produtosComprados as $cadaProduto)
+ 	foreach ($produtosParaVender as $cadaProduto)
 			echo $cadaProduto['idproduto']." - "
 				.$cadaProduto['nome']. " - "
 				.$cadaProduto['quantidade']." - "
 				.$cadaProduto['preco'].
+				"<table>".
+				"<tr>".
+				"<td>".
 				"<form name='productDetailForm' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">".
 						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
     					"<input type=submit value=\"Detalhar\">".
-    			"</form><br>";
+    			"</form>".
+    			"</td>".
+    			"<td>".
+				"<form name='productEditForm' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">".
+						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
+    					"<input type=submit value=\"Editar/Atualizar\">".
+    			"</form>".
+    			"</td>".
+    			"</tr>".
+    			"</table>";
 						
 ?>
 
