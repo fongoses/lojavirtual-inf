@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS `lojavirtual`.`usuario` ;
 CREATE TABLE IF NOT EXISTS `lojavirtual`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(100) NOT NULL,
-  `email` VARCHAR(30) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
   `senha` VARCHAR(128) NOT NULL,
   `endereco` VARCHAR(100) NOT NULL,
   `cidade` VARCHAR(30) NOT NULL,
@@ -48,12 +48,11 @@ CREATE TABLE IF NOT EXISTS `lojavirtual`.`usuario` (
   `cep` VARCHAR(8) NULL,
   `nascimento` DATE NULL,
   `cpf` VARCHAR(11) NULL,
-  `cliente` TINYINT(1) NULL,
-  `vendedor` TINYINT(1) NULL,
-  `admin` TINYINT(1) NULL,
+  `admin` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`idusuario`),
   INDEX `fk_iduf_idx` (`iduf` ASC),
   INDEX `fk_idpais_idx` (`idpais` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   CONSTRAINT `fk_usuario_uf1`
     FOREIGN KEY (`iduf`)
     REFERENCES `lojavirtual`.`uf` (`iduf`)
@@ -84,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `lojavirtual`.`produto` (
   `tamanholote` INT NULL,
   `precolote` DOUBLE NULL,
   `validadeaposcompra` INT NULL,
+  `excluidovendedor` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`idproduto`))
 ENGINE = InnoDB;
 
@@ -101,12 +101,12 @@ CREATE TABLE IF NOT EXISTS `lojavirtual`.`produto_vendedor` (
   PRIMARY KEY (`idvendaproduto`, `idvendedor`, `idproduto`),
   INDEX `fk_idvendedor_idx` (`idvendedor` ASC),
   INDEX `fk_idproduto_idx` (`idproduto` ASC),
-  CONSTRAINT `fk_idvendedor`
+  CONSTRAINT `fk_produtovendedor_idvendedor`
     FOREIGN KEY (`idvendedor`)
     REFERENCES `lojavirtual`.`usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_idproduto`
+  CONSTRAINT `fk_produtovendedor_idproduto`
     FOREIGN KEY (`idproduto`)
     REFERENCES `lojavirtual`.`produto` (`idproduto`)
     ON DELETE NO ACTION
@@ -142,8 +142,6 @@ CREATE TABLE IF NOT EXISTS `lojavirtual`.`compra_cliente` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = big5
-COLLATE = big5_chinese_ci
 COMMENT = 'Tabela que relaciona o produto de um determinado cliente, at /* comment truncated */ /*raves da relacao COMPRA. 
 Obs: a relacao eh de 1:n, afinal um cliente pode ter n produtos. Aqui somente estao presentes os ids dos usuarios que 
 possuam a coluna CLIENTE com o valor TRUE. Observacao: Cada compra possui um identificador unico, porem podemos 

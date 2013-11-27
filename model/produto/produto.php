@@ -370,10 +370,7 @@ class produto {
 																		mysql_real_escape_string($this->getValidadeAposCompra()));
 																		
 				
-			$query2 = sprintf("INSERT into produto_vendedor (idvendedor,idproduto,datacadastro) VALUES (%d,%d,NOW())",
-																		$idVendedor,
-																		$idProdutoCadastrado);
-
+			
 			// inicia a transacao
 			$db->beginTransaction();
 
@@ -383,7 +380,10 @@ class produto {
 
 			    $idProdutoCadastrado = $db->lastInsertId();
 			    $idVendedor=1; //obter esse valor da sessao
-			    
+				$query2 = sprintf("INSERT into produto_vendedor (idvendedor,idproduto,datacadastro) VALUES (%d,%d,NOW())",
+																		$idVendedor,
+																		$idProdutoCadastrado);
+    
 			    $count = $db->exec($query2);			
 			    
 
@@ -490,9 +490,9 @@ class produto {
 
 			//join eh prod carteziano, ja natural join eh o natural join, de fato
 			if (!$code) 
-				$query = sprintf("SELECT * from produto_cliente pc NATURAL JOIN produto p WHERE pc.idcliente = %d ",$idUsuario);
+				$query = sprintf("SELECT * from produto_cliente pc NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pc.idcliente = %d ",$idUsuario);
 			else
-				$query = sprintf("SELECT * from produto_vendedor pv NATURAL JOIN produto p WHERE pv.idvendedor = %d ",$idUsuario);
+				$query = sprintf("SELECT * from produto_vendedor pv NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pv.idvendedor = %d ",$idUsuario);
 			
 			if(!$this->isIdProdutoEmpty())
 				$query .=  sprintf("AND p.idproduto = %d ",$this->getIdProduto());
@@ -554,24 +554,12 @@ class produto {
 			//conecta na base base
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 			
-			$query1 = sprintf("delete from produto_vendedor WHERE idproduto = '%d'",
-												$this->getIdProduto());
+			$query = sprintf("UPDATE produto SET produto.excluidovendedor= 1 WHERE idproduto=%d",
+															$this->getIdProduto());
 
-
-			$query2 = sprintf("delete from produto_vendedor WHERE idproduto = '%d'",
-												$this->getIdProduto());
-
-			// inicia a transacao
-			$db->beginTransaction();
-				
-
-		    
-		    	
-		    	$count1 = $db->exec($query1);
-		    	$count2 = $db->exec($query2);
-
-		   	$db->commit();//finaliza transacao		   		   	
-
+			//echo $query;
+			$db->exec($query);		
+			
 		    $db = null;//fecha conexao
 
 		    return 1; //1:sucesso
@@ -654,7 +642,7 @@ class produto {
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 
 			//obs, join nao esta retornando id do usuario(apenas os campos de produto)
-			$query = sprintf("SELECT p.* from produto_vendedor pv NATURAL JOIN produto p WHERE pv.idvendedor = %d",$idUsuario);
+			$query = sprintf("SELECT p.* from produto_vendedor pv NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pv.idvendedor = %d",$idUsuario);
 		    
 		    $result = $db->query($query);		    
 		    
