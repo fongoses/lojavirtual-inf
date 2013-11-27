@@ -29,8 +29,7 @@
  	$produto = new produto();
 
  	$produto->setIdProduto($idProduto); 
- 	$produto->getFormFields();
- 	$produto->echoAllFields();
+ 	$produto->getFormFields(); 	
  		
  	
  	//if($produto->belongsToUser($_SESSION['user']->getName()))

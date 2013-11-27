@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *Contain classes baseUser and subclass completeUser.
+ *Contain classes usuarioBase and subclass usuarioCompleto.
  * 
  */
 
@@ -28,7 +28,7 @@ if(!defined("__USERPHP__")) {
 	
  
  
- class baseUser{
+ class usuarioBase{
  	
  	/*
  	 * store user's information only to login.
@@ -107,7 +107,7 @@ if(!defined("__USERPHP__")) {
  		
  		/*
  		 * Get's all the Login's form fields needed to subscription.
- 		 * Stores it in this class(completeUser).
+ 		 * Stores it in this class(usuarioCompleto).
  		 * 
  		 */
  		
@@ -124,7 +124,7 @@ if(!defined("__USERPHP__")) {
  		
  	}
  	
- 	public function getCompleteUserDataAndStoreInTheSession(){
+ 	public function getUsuarioCompletoDataAndStoreInTheSession(){
  		/*
  		 * Obtem usuario atual em $_SESSION['user'], recupera todas suas informacoes
  		 * no DB e regrava novamente em $_SESSION['user']
@@ -138,12 +138,12 @@ if(!defined("__USERPHP__")) {
  		 if(isset($_SESSION['user'])){
  		 	
  		 	
- 		 	$completeUser = $_SESSION['user'];
+ 		 	$usuarioCompleto = $_SESSION['user'];
  		 	
  		 	
  		 	//copy fields
- 		 	//$completeUser->setEmail($baseUser->getEmail()); 		 	
- 		 	//$completeUser->setPass($baseUser->getPass());
+ 		 	//$usuarioCompleto->setEmail($usuarioBase->getEmail()); 		 	
+ 		 	//$usuarioCompleto->setPass($usuarioBase->getPass());
  		 	
  		 	
  		 	
@@ -155,7 +155,7 @@ if(!defined("__USERPHP__")) {
  		 	 * 
  		 	 */
  		 	
- 		 	$_SESSION['user'] = $completeUser; 		 	
+ 		 	$_SESSION['user'] = $usuarioCompleto; 		 	
  		 } 		
  	}
  	
@@ -174,7 +174,7 @@ if(!defined("__USERPHP__")) {
  		 
  		 if(isset($_SESSION['user'])){
  		 	
- 		 	$baseUser = $_SESSION['user'];
+ 		 	$usuarioBase = $_SESSION['user'];
  		 	
  		 	
  		 	
@@ -201,16 +201,16 @@ if(!defined("__USERPHP__")) {
 								
 	 		 
 	 		 //if user exists in database, get user data and starts a session with it	 		 
-	 		 $completeUser = new completeUser();
+	 		 $usuarioCompleto = new usuarioCompleto();
 	 		 
 	 		 //get user data
-	 		 $completeUser->setLogin(mysql_field_name($result,0));
-	 		 $completeUser->setPass(mysql_field_name($result,1));
-	 		 $completeUser->setEmail(mysql_field_name($result,2));
-	 		 $completeUser->setName(mysql_field_name($result,3));
+	 		 $usuarioCompleto->setLogin(mysql_field_name($result,0));
+	 		 $usuarioCompleto->setPass(mysql_field_name($result,1));
+	 		 $usuarioCompleto->setEmail(mysql_field_name($result,2));
+	 		 $usuarioCompleto->setName(mysql_field_name($result,3));
 	 		 
 	 		 	 		 	
-	 		 $_SESSION['user'] = $completeUser; 		 	
+	 		 $_SESSION['user'] = $usuarioCompleto; 		 	
  		 }*/ 
  		 	 @session_start();
  		 	 
@@ -256,7 +256,7 @@ if(!defined("__USERPHP__")) {
 														}
 		 		 
 		 		 //if user exists in database, get user data and starts a session with it	 		 
-		 		 $completeUser = new completeUser();
+		 		 $usuarioCompleto = new usuarioCompleto();
 		 		 
 		 		
 		 		 $row =  mysql_fetch_array($result,MYSQL_NUM); //obtem a primeira linha, armazena em row, e incrementa o ponteiro da tabela resultante		 		 
@@ -274,16 +274,16 @@ if(!defined("__USERPHP__")) {
 		 		 //echo '<script type="text/javascript"> alert("'.$this->login.'")</script>';exit;	
 		 		 
 		 		 //get user data
-		 		 $completeUser->setName($row[1]); //coluna 0 eh a id/PK
-		 		 $completeUser->setEmail($row[3]);
-		 		 //echo '<script type="text/javascript"> alert("'.$completeUser->getLogin().'")</script>';exit;
+		 		 $usuarioCompleto->setName($row[1]); //coluna 0 eh a id/PK
+		 		 $usuarioCompleto->setEmail($row[3]);
+		 		 //echo '<script type="text/javascript"> alert("'.$usuarioCompleto->getLogin().'")</script>';exit;
 		 		 //echo '**'.$row[0].'**<br/>';
-		 		 //$completeUser->setPass($row[3]);//em principio,nao ira precisar do pass na sessao. Caso necessite a senha para uma operacao mais segura, serah feita uma nova solicitacao e uma consulta ao BD
+		 		 //$usuarioCompleto->setPass($row[3]);//em principio,nao ira precisar do pass na sessao. Caso necessite a senha para uma operacao mais segura, serah feita uma nova solicitacao e uma consulta ao BD
 		 		 
 		 		 
 		 		 
 						 		 		 	
-		 		 $_SESSION['user'] = $completeUser;
+		 		 $_SESSION['user'] = $usuarioCompleto;
 		 		 
 		 		 mysql_close();
 		 		 return 1;
@@ -339,7 +339,7 @@ if(!defined("__USERPHP__")) {
  	
  }
  
-class completeUser extends baseUser{
+class usuarioCompleto extends usuarioBase{
 		
  	/*
  	 * store all user's information needed for database's task.
@@ -663,11 +663,6 @@ class completeUser extends baseUser{
 																mysql_real_escape_string($this->getCpf()),
 																mysql_real_escape_string($this->getAdmin()));
 																
-																
-																
-												
-												
-												echo $query;
 												
 												/*realiza a consulta*/
 												$result = mysql_query($query); //or die('<script type="text/javascript"> alert("Falha ao cadastrar, tente novamente mais tarde.");</script>');								
