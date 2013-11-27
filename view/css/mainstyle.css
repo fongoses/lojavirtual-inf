@@ -73,3 +73,33 @@
     display: block;
     margin-top: 10px;
 }
+
+
+/* Estilos personalizados para a bootstrap */
+.btn-primary{
+
+    background-color: #745675;
+    border-color:#1C181C;
+}
+
+.btn-primary:hover{
+
+    background-color: #5E455E;
+}
+
+a{
+
+    color: #3F3140;
+}
+
+a:hover{
+
+    color: #2B212B;
+}
+
+.form-control:focus{
+
+    border-color:#DAB2DB;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(98, 70, 99, 0.6);
+
+}
