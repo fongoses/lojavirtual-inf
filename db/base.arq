@@ -1,0 +1,276 @@
+-- MySQL dump 10.13  Distrib 5.5.33, for debian-linux-gnu (i686)
+--
+-- Host: localhost    Database: lojavirtual
+-- ------------------------------------------------------
+-- Server version	5.5.33-1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `compra_cliente`
+--
+
+DROP TABLE IF EXISTS `compra_cliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `compra_cliente` (
+  `idcompra` int(11) NOT NULL AUTO_INCREMENT,
+  `idcliente` int(11) NOT NULL,
+  `idproduto` int(11) NOT NULL,
+  `quantidade` int(11) DEFAULT NULL,
+  `datahoracompra` datetime DEFAULT NULL,
+  PRIMARY KEY (`idcompra`,`idcliente`,`idproduto`),
+  KEY `fk_idproduto_idx` (`idproduto`),
+  KEY `fk_idcliente_idx` (`idcliente`),
+  CONSTRAINT `fk_compradocliente_idcliente` FOREIGN KEY (`idcliente`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compradocliente_idproduto` FOREIGN KEY (`idproduto`) REFERENCES `produto` (`idproduto`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabela que relaciona o produto de um determinado cliente, at /* comment truncated */ /*raves da relacao COMPRA. \nObs: a relacao eh de 1:n, afinal um cliente pode ter n produtos. Aqui somente estao presentes os ids dos usuarios que \npossuam a coluna CLIENTE com o valor TRUE. Observacao: Cada compra possui um identificador unico, porem podemos \nter o mesmo produto comprado diversas vezes pelo mesmo cliente, de modo que cada compra corresponderah a uma \nentrada diferente na tabela.*/';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `compra_cliente`
+--
+
+LOCK TABLES `compra_cliente` WRITE;
+/*!40000 ALTER TABLE `compra_cliente` DISABLE KEYS */;
+/*!40000 ALTER TABLE `compra_cliente` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `loja`
+--
+
+DROP TABLE IF EXISTS `loja`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `loja` (
+  `idloja` int(11) NOT NULL,
+  `razao_social` varchar(100) NOT NULL,
+  `nome_fantasia` varchar(100) NOT NULL,
+  `CNPJ` varchar(14) NOT NULL,
+  `endereco` varchar(100) NOT NULL,
+  `cidade` varchar(30) NOT NULL,
+  `iduf` varchar(2) NOT NULL,
+  `idpais` varchar(2) NOT NULL,
+  `CEP` varchar(8) DEFAULT NULL,
+  `titulo` varchar(100) DEFAULT NULL COMMENT 'Nome alternativo para aparecer junto com a descrição da loja.',
+  `descricao` varchar(300) DEFAULT NULL COMMENT 'Descrição da loja.',
+  `foto` varchar(300) DEFAULT NULL COMMENT 'Link para foto da loja.',
+  `idvendedor` int(11) NOT NULL,
+  PRIMARY KEY (`idloja`,`idvendedor`),
+  KEY `fk_idvendedor_idx` (`idvendedor`),
+  KEY `fk_idpais_idx` (`idpais`),
+  KEY `fk_iduf_idx` (`iduf`),
+  CONSTRAINT `fk_loja_idusuario` FOREIGN KEY (`idvendedor`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loja_pais1` FOREIGN KEY (`idpais`) REFERENCES `pais` (`idpais`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_loja_uf1` FOREIGN KEY (`iduf`) REFERENCES `uf` (`iduf`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabela com as lojas do Vendedor';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `loja`
+--
+
+LOCK TABLES `loja` WRITE;
+/*!40000 ALTER TABLE `loja` DISABLE KEYS */;
+/*!40000 ALTER TABLE `loja` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pais`
+--
+
+DROP TABLE IF EXISTS `pais`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pais` (
+  `idpais` varchar(2) NOT NULL COMMENT 'Código do país de 2 caracteres, conforme norma ISO3166',
+  `nome` varchar(50) NOT NULL,
+  PRIMARY KEY (`idpais`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabela que Armazena a lista de países';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pais`
+--
+
+LOCK TABLES `pais` WRITE;
+/*!40000 ALTER TABLE `pais` DISABLE KEYS */;
+INSERT INTO `pais` VALUES ('AD','Andorra'),('AE','Emirados Árabes Unidos'),('AF','Afeganistão'),('AG','Antígua e Barbuda'),('AI','Anguilla'),('AL','Albânia'),('AM','Armênia'),('AN','Antilhas Holandesas'),('AO','Angola'),('AQ','Antártida'),('AR','Argentina'),('AS','Samoa Ocidental'),('AT','Áustria'),('AU','Austrália'),('AW','Aruba'),('AX','Ilhas Aland'),('AZ','Azerbaijão'),('BA','Bósnia-Herzegóvina'),('BB','Barbados'),('BD','Bangladesh'),('BE','Bélgica'),('BF','Burkina Fasso'),('BG','Bulgária'),('BH','Bahrein'),('BI','Burundi'),('BJ','Benin'),('BL','São Bartolomeu'),('BM','Bermudas'),('BN','Brunei'),('BO','Bolívia'),('BR','Brasil'),('BS','Bahamas'),('BT','Butão'),('BV','Ilha Bouvet (Território da Noruega)'),('BW','Botsuana'),('BY','Belarus'),('BZ','Belize'),('CA','Canadá'),('CC','Ilhas Cocos'),('CD','República Democrática do Congo'),('CF','República Centro-Africana'),('CG','Congo'),('CH','Suíça'),('CI','Costa do Marfim'),('CK','Ilhas Cook'),('CL','Chile'),('CM','Camarões'),('CN','China'),('CO','Colômbia'),('CR','Costa Rica'),('CU','Cuba'),('CV','Cabo Verde'),('CX','Ilha Natal'),('CY','Chipre'),('CZ','República Tcheca'),('DE','Alemanha'),('DJ','Djibuti'),('DK','Dinamarca'),('DM','Dominica'),('DO','República Dominicana'),('DZ','Argélia'),('EC','Equador'),('EE','Estônia'),('EG','Egito'),('EH','Saara Ocidental'),('ER','Eritréia'),('ES','Espanha'),('ET','Etiópia'),('FI','Finlândia'),('FJ','Fiji'),('FK','Ilhas Falkland (Malvinas)'),('FM','Micronésia'),('FO','Ilhas Faroes'),('FR','França'),('G','Guernsey'),('GA','Gabão'),('GB','Grã-Bretanha (Reino Unido, UK)'),('GD','Granada'),('GE','Geórgia'),('GF','Guiana Francesa'),('GH','Gana'),('GI','Gibraltar'),('GL','Groelândia'),('GM','Gâmbia'),('GN','Guiné'),('GP','Guadalupe'),('GQ','Guiné Equatorial'),('GR','Grécia'),('GS','Ilhas Geórgia do Sul e Sandwich do Sul'),('GT','Guatemala'),('GU','Guam (Território dos Estados Unidos)'),('GW','Guiné-Bissau'),('GY','Guiana'),('HK','Hong Kong'),('HM','Ilhas Heard e McDonald (Território da Austrália)'),('HN','Honduras'),('HR','Croácia (Hrvatska)'),('HT','Haiti'),('HU','Hungria'),('ID','Indonésia'),('IE','Irlanda'),('IL','Israel'),('IM','Ilha do Homem'),('IN','índia'),('IO','Território Britânico do Oceano índico'),('IQ','Iraque'),('IR','Irã'),('IS','Islândia'),('IT','Itália'),('JE','Jersey'),('JM','Jamaica'),('JO','Jordânia'),('JP','Japão'),('KE','Kênia'),('KG','Quirguistão'),('KH','Camboja'),('KI','Kiribati'),('KM','Ilhas Comores'),('KN','São Cristóvão e Névis'),('KP','Coréia do Norte'),('KR','Coréia do Sul'),('KW','Kuait'),('KY','Ilhas Cayman'),('KZ','Cazaquistão'),('LA','Laos'),('LB','Líbano'),('LC','Santa Lúcia'),('LI','Liechtenstein'),('LK','Sri Lanka'),('LR','Libéria'),('LS','Lesoto'),('LT','Lituânia'),('LU','Luxemburgo'),('LV','Látvia'),('LY','Líbia'),('MA','Marrocos'),('MC','Mônaco'),('MD','Moldova'),('ME','Montenegro'),('MF','São Martim'),('MG','Madagascar'),('MH','Ilhas Marshall'),('MK','Macedônia (República Yugoslava)'),('ML','Mali'),('MM','Myanma'),('MN','Mongólia'),('MO','Macau'),('MP','Ilhas Marianas do Norte'),('MQ','Martinica'),('MR','Mauritânia'),('MS','Montserrat'),('MT','Malta'),('MU','Maurício'),('MV','Maldivas'),('MW','Malaui'),('MX','México'),('MY','Malásia'),('MZ','Moçambique'),('NA','Namíbia'),('NC','Nova Caledônia'),('NE','Níger'),('NF','Ilhas Norfolk'),('NG','Nigéria'),('NI','Nicarágua'),('NL','Holanda'),('NO','Noruega'),('NP','Nepal'),('NR','Nauru'),('NU','Niue'),('NZ','Nova Zelândia'),('OM','Omã'),('PA','Panamá'),('PE','Peru'),('PF','Polinésia Francesa'),('PG','Papua-Nova Guiné'),('PH','Filipinas'),('PK','Paquistão'),('PL','Polônia'),('PM','St. Pierre and Miquelon'),('PN','Ilha Pitcairn'),('PR','Porto Rico'),('PS','Territórios Palestinos Ocupados'),('PT','Portugal'),('PW','Palau'),('PY','Paraguai'),('QA','Qatar'),('RE','Ilha Reunião'),('RO','Romênia'),('RS','Sérvia'),('RU','Rússia (antiga URSS) - Federação Russa'),('RW','Ruanda'),('SA','Arábia Saudita'),('SB','Ilhas Solomão'),('SC','Ilhas Seychelles'),('SD','Sudão'),('SE','Suécia'),('SG','Cingapura'),('SH','Santa Helena'),('SI','Eslovênia'),('SJ','Ilhas Svalbard e Jan Mayen'),('SK','Eslováquia'),('SL','Serra Leoa'),('SM','San Marino'),('SN','Senegal'),('SO','Somália'),('SR','Suriname'),('ST','São Tomé e Príncipe'),('SV','El Salvador'),('SY','Síria'),('SZ','Suazilândia'),('TC','Ilhas Turks e Caicos'),('TD','Chade'),('TF','Territórios do Sul da França'),('TG','Togo'),('TH','Tailândia'),('TJ','Tadjiquistão'),('TK','Ilhas Tokelau'),('TM','Turcomenistão'),('TN','Tunísia'),('TO','Tonga'),('TP','Timor Leste'),('TR','Turquia'),('TT','Trinidad and Tobago'),('TV','Tuvalu'),('TW','Taiwan'),('TZ','Tanzânia'),('UA','Ucrânia'),('UG','Uganda'),('UM','Ilhas Menores dos Estados Unidos'),('US','Estados Unidos'),('UY','Uruguai'),('UZ','Uzbequistão'),('VA','Vaticano'),('VC','Saint Vincente e Granadinas'),('VE','Venezuela'),('VG','Ilhas Virgens (Inglaterra)'),('VI','Ilhas Virgens (Estados Unidos)'),('VN','Vietnã'),('VU','Vanuatu'),('WF','Ilhas Wallis e Futuna'),('WS','Samoa Ocidental'),('YE','Iêmen'),('YT','Mayotte'),('ZA','África do Sul'),('ZM','Zâmbia'),('ZW','Zimbábue');
+/*!40000 ALTER TABLE `pais` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `produto`
+--
+
+DROP TABLE IF EXISTS `produto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `produto` (
+  `idproduto` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) DEFAULT NULL,
+  `descricao` varchar(1000) DEFAULT NULL,
+  `quantidade` varchar(45) DEFAULT NULL,
+  `preco` float DEFAULT NULL,
+  `linkfoto` varchar(1000) DEFAULT NULL,
+  `datainicio` date DEFAULT NULL,
+  `datatermino` date DEFAULT NULL,
+  `tamanholote` int(11) DEFAULT NULL,
+  `precolote` double DEFAULT NULL,
+  `validadeaposcompra` int(11) DEFAULT NULL,
+  `excluidovendedor` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`idproduto`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `produto`
+--
+
+LOCK TABLES `produto` WRITE;
+/*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` VALUES (2,'Bola','','10203',200,'','0000-00-00','0000-00-00',0,0,0,1),(3,'Bola','','10203',2003,'','0000-00-00','0000-00-00',0,0,0,1),(4,'Produtinhozinhos','','1000',1000,'','0000-00-00','0000-00-00',0,0,0,1),(5,'Show dos Rolling Stones HOJE IMPERDIVEL','Very nice','1',2,'../../img/stones.jpg','0000-00-00','0000-00-00',10,20,30,0),(6,'ApresentaÃ§Ã£o Teatral','Linda apresentaÃ§Ã£o Teatral no teatro da Fiergs','10',100,'','0000-00-00','0000-00-00',0,0,0,1),(8,'Show do RUSH Yeah','','10',100,'../../img/rush.jpg','0000-00-00','0000-00-00',2,0,0,0),(9,'Show do RAMONES GALERA!!!!!','Show Muito Legal no Gigantinho!!! NÃ£o percam!','10',100,'','0000-00-00','0000-00-00',50,50,0,1),(10,'Show do Ramones + Pizza NA SAIDA!!','COMBO Pizza ApÃ³s o Show ! Aproveitem que Ã© sÃ³ hoje!','100',100,'','0000-00-00','0000-00-00',0,0,0,0),(11,'Jogo + Pizza + Ceva','Aproveite e venha desfrutar do JOGO COM SUA Cevinha e mais uma Pizza de BOa!!','10',10005,'','0000-00-00','0000-00-00',0,0,0,0),(12,'Jogo do Inter + CafÃ©','Aproveitem a super promoÃ§Ã£o do final de semana! O lote de 10 unidades sai mais barato!','10',1000,'','0000-00-00','0000-00-00',10,300,0,0),(13,'Coffe Break do Dacomp AGORA COM DESCONTO DE 30%','Venha Participar do nosso coffe Break!!! ele eh muito legal!!','30',10,'../../img/pizza.jpg','0000-00-00','0000-00-00',0,0,0,0),(14,'ApresentaÃ§Ã£o Teatral','Linda apresentaÃ§Ã£o Teatral no teatro da Fiergs','10',100,'../../img/teatro.jpg','0000-00-00','0000-00-00',0,0,0,0);
+/*!40000 ALTER TABLE `produto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `produto_cliente`
+--
+
+DROP TABLE IF EXISTS `produto_cliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `produto_cliente` (
+  `idcliente` int(11) NOT NULL,
+  `idproduto` int(11) NOT NULL,
+  `quantidade` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idproduto`,`idcliente`),
+  KEY `fk_idcliente_idx` (`idcliente`),
+  KEY `fk_idproduto_idx` (`idproduto`),
+  CONSTRAINT `fk_produtocliente_idcliente` FOREIGN KEY (`idcliente`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_produtocliente_idproduto` FOREIGN KEY (`idproduto`) REFERENCES `produto` (`idproduto`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Armazena as informacoes dos produtos que cada cliente possui /* comment truncated */ /*.*/';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `produto_cliente`
+--
+
+LOCK TABLES `produto_cliente` WRITE;
+/*!40000 ALTER TABLE `produto_cliente` DISABLE KEYS */;
+/*!40000 ALTER TABLE `produto_cliente` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `produto_vendedor`
+--
+
+DROP TABLE IF EXISTS `produto_vendedor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `produto_vendedor` (
+  `idvendaproduto` int(11) NOT NULL AUTO_INCREMENT,
+  `idvendedor` int(11) NOT NULL,
+  `idproduto` int(11) NOT NULL,
+  `datacadastro` datetime DEFAULT NULL,
+  PRIMARY KEY (`idvendaproduto`,`idvendedor`,`idproduto`),
+  KEY `fk_idvendedor_idx` (`idvendedor`),
+  KEY `fk_idproduto_idx` (`idproduto`),
+  CONSTRAINT `fk_produtovendedor_idproduto` FOREIGN KEY (`idproduto`) REFERENCES `produto` (`idproduto`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_produtovendedor_idvendedor` FOREIGN KEY (`idvendedor`) REFERENCES `usuario` (`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='Tabela que relaciona o produto de um determinado vendedor. O /* comment truncated */ /*bs: a relacao eh de 1:n, afinal um vendedor pode ter\nn produtos.\nAqui somenta estao presentes usuarios que tenham a coluna vendedor com o valor TRUE*/';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `produto_vendedor`
+--
+
+LOCK TABLES `produto_vendedor` WRITE;
+/*!40000 ALTER TABLE `produto_vendedor` DISABLE KEYS */;
+INSERT INTO `produto_vendedor` VALUES (1,1,2,'2013-11-27 01:51:32'),(2,1,3,'2013-11-27 01:53:54'),(3,1,4,'2013-11-27 11:08:07'),(4,1,5,'2013-11-28 19:18:36'),(5,1,6,'2013-11-29 01:35:33'),(6,14,8,'2013-11-29 01:51:26'),(7,20,9,'2013-11-29 04:09:07'),(8,20,10,'2013-11-29 04:17:13'),(9,20,11,'2013-11-29 05:21:30'),(10,22,12,'2013-11-29 06:15:05'),(11,23,13,'2013-11-29 07:50:39'),(12,1,14,'2013-11-29 08:27:56');
+/*!40000 ALTER TABLE `produto_vendedor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `uf`
+--
+
+DROP TABLE IF EXISTS `uf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `uf` (
+  `iduf` varchar(2) NOT NULL,
+  `nome` varchar(20) NOT NULL,
+  PRIMARY KEY (`iduf`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabela de UF (Estados)';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `uf`
+--
+
+LOCK TABLES `uf` WRITE;
+/*!40000 ALTER TABLE `uf` DISABLE KEYS */;
+INSERT INTO `uf` VALUES ('AC','Acre'),('AL','Alagoas'),('AM','Amazonas'),('AP','Amapá'),('BA','Bahia'),('CE','Ceará'),('DF','Distrito Federal'),('ES','Espírito Santo'),('GO','Goiás'),('MA','Maranhão'),('MG','Minas Gerais'),('MS','Mato Grosso do Sul'),('MT','Mato Grosso'),('PA','Pará'),('PB','Paraíba'),('PE','Pernambuco'),('PI','Piauí'),('PR','Paraná'),('RJ','Rio de Janeiro'),('RN','Rio Grande do Norte'),('RO','Rondônia'),('RR','Roraima'),('RS','Rio Grande do Sul'),('SC','Santa Catarina'),('SE','Sergipe'),('SP','São Paulo'),('TO','Tocantins');
+/*!40000 ALTER TABLE `uf` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `usuario` (
+  `idusuario` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(128) NOT NULL,
+  `endereco` varchar(100) NOT NULL,
+  `cidade` varchar(30) NOT NULL,
+  `iduf` varchar(2) NOT NULL,
+  `idpais` varchar(2) NOT NULL,
+  `cep` varchar(8) DEFAULT NULL,
+  `nascimento` date DEFAULT NULL,
+  `cpf` varchar(11) DEFAULT NULL,
+  `admin` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`idusuario`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  KEY `fk_iduf_idx` (`iduf`),
+  KEY `fk_idpais_idx` (`idpais`),
+  CONSTRAINT `fk_usuario_pais1` FOREIGN KEY (`idpais`) REFERENCES `pais` (`idpais`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_usuario_uf1` FOREIGN KEY (`iduf`) REFERENCES `uf` (`iduf`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'Joao 30','mariogasparoni@gmail.com','ff64a1c43498d955147518733ac88c7c','','','RS','BR','','0000-00-00','CPF',0),(5,'Joaozinho','mariogasparonia@gmail.com','827ccb0eea8a706c4c34a16891f84e7b','','','RS','BR','','0000-00-00','',0),(6,'Joaozinho30','mariogasparo@gmail.com','827ccb0eea8a706c4c34a16891f84e7b','','','RS','BR','','0000-00-00','',0),(7,'Mario','luiz@gmail.com','827ccb0eea8a706c4c34a16891f84e7b','','','RS','BR','','0000-00-00','',0),(8,'Fulano de Tal','mariogasparonasdi@gmail.com','827ccb0eea8a706c4c34a16891f84e7b','','','RS','BR','','0000-00-00','',0),(9,'Mário Cesar Gasparoni Junior','mcgjunior@gmail.com','6537e99af2c2223642df9f70a0b5afca','Rua B 238','Porto Alegre','RS','BR','91040030','0000-00-00','',0),(10,'FUlano','mariogasparoasdasdni@gmail.com','827ccb0eea8a706c4c34a16891f84e7b','','','RS','BR','','0000-00-00','',0),(11,'jose','dada@dada.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',0),(14,'Fulano de talinihaska','fulano@tal.com','202cb962ac59075b964b07152d234b70','','','RS','BR','','0000-00-00','CPF',1),(19,'Joao da silva tavares','joaodasilva@gmail.com','ff64a1c43498d955147518733ac88c7c','','','RS','BR','','0000-00-00','CPF',1),(20,'Luiz Souza','luiz@luiz.com','81dc9bdb52d04dc20036dbd8313ed055','Avenida Bento Gonçalves 9500','Porto Alegre','RS','BR','','0000-00-00','',1),(21,'Super Mario','felizberto@feliz.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',1),(22,'Mario Junior','meuemail@meuemail.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',1),(23,'Lucas Herbert Jones','lucas@lucas.com','ff64a1c43498d955147518733ac88c7c','','','RS','BR','','0000-00-00','CPF',1),(24,'João da Silva','joaosilva@teste.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',1),(25,'Mario Junior','junior@junior.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',1),(26,'Test User','jodasilva@teste.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',1),(27,'Jojo','jozinhodasilva@teste.com','81dc9bdb52d04dc20036dbd8313ed055','','','RS','BR','','0000-00-00','',1);
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-11-29  9:53:33
