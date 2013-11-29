@@ -24,12 +24,12 @@
   	//echo '<script type="text/javascript"> alert("aaa") </script>'
  	/* --Methods-----------------------------------------------------*/
 	 	
-	$idProduto = intval(mysql_real_escape_string($_POST['idproduto'])); //obter essa informcacao da sessao
+	$idProduto = intval($_POST['idproduto']); //obter essa informcacao da sessao
 
  	$produto = new produto();
 
  	$produto->setIdProduto($idProduto); 
- 	$produto->getFormFields(); 	
+ 	$produto->getUpdateFormFields(); 	
  		
  	
  	//if($produto->belongsToUser($_SESSION['user']->getName()))

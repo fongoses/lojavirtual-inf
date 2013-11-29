@@ -1,0 +1,102 @@
+
+/* Estilos personalizados para a bootstrap */
+.btn-primary{
+
+    background-color: #745675;
+    border-color:#1C181C;
+}
+
+.btn-primary:hover{
+
+    background-color: #5E455E;
+    border-color:#1C181C;
+}
+
+.btn-primary:focus{
+
+    background-color: #745675;
+    border-color:#1C181C;
+}
+
+
+a{
+
+    color: #3F3140;
+}
+
+a:hover{
+
+    color: #2B212B;
+}
+
+.form-control:focus{
+
+    border-color:#DAB2DB;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(98, 70, 99, 0.6);
+
+}
+
+.modal-title{
+    color: #5E455E;
+
+}
+
+
+/*barra de navegacao personalizada */
+.navbar-smart {
+    background-color:#423242;
+    color:#ffffff;
+    border-radius:0;
+}
+
+.navbar-smart .navbar-nav > li > a {
+    color:#fff;
+}
+.navbar-smart .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #000000;
+    background-color:transparent;
+}
+.navbar-smart .navbar-brand {
+    color:#eeeeee;
+}
+
+.navbar-smart .navbar-brand:hover,
+.navbar-smart .navbar-brand:focus {
+    color: #000000;
+}
+
+.navbar-smart .navbar-toggle:hover,
+.navbar-smart .navbar-toggle:focus {
+    background-color: #DDD;
+}
+
+.navbar-smart .navbar-nav > .open > a, 
+.navbar-smart .navbar-nav > .open > a:hover, 
+.navbar-smart .navbar-nav > .open > a:focus {
+    color: #555;
+    background-color: #D5D5D5;
+}
+
+
+.navbar-smart .nav > .open > a, 
+.navbar-smart .nav > .open > a:hover, 
+.navbar-smart .nav > .open > a:focus {
+    color: #555;
+    background-color: #D5D5D5;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #745675;
+}
+
+.nav .caret,
+.nav .a .caret,
+.nav a:hover .caret,
+.nav .open .caret,
+.nav .caret:hover,
+.nav .caret:focus {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+

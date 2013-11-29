@@ -22,10 +22,10 @@ define("__PRODUTOPHP__", "true");
  	
  	
  	/* --Includes/Imports---------------------------------------------*/
- 	
+ 	include($CONTROLLERPATH.'/session/restrict/restrictPageHeader.php');
  	include($CONTROLLERPATH.'/errors/errors.php');
 	include($MODELPATH.'/produto/configProduto.php');
-	include($MODELPATH.'/infodb/datadb.inc');
+	require_once($MODELPATH.'/infodb/datadb.inc');
 	
 	
 class produto {
@@ -331,6 +331,29 @@ class produto {
  		$this->setValidadeAposCompra($_POST['validadeaposcompra']);			
  		
  	}
+
+
+ 	public function getUpdateFormFields(){
+ 		
+ 		/*
+ 		 * Get's all the form fields related to a product
+ 		 * Stores it in this class.
+ 		 * 
+ 		 */
+ 		
+ 		
+ 		//consistencia de dados eh client-side (via javascript)		
+		$this->setNome($_POST['nome']); 		
+		$this->setDescricao($_POST['descricao']);
+ 		$this->setQuantidade($_POST['quantidade']);
+ 		$this->setPreco($_POST['preco']);
+ 		$this->setLinkFoto($_POST['linkfoto']); 		
+ 		$this->setDataTermino($_POST['datatermino']);
+ 		$this->setTamanhoLote($_POST['tamanholote']);
+ 		$this->setPrecoLote($_POST['precolote']);
+ 		$this->setValidadeAposCompra($_POST['validadeaposcompra']);			
+ 		
+ 	}
  	
  
  	
@@ -379,7 +402,7 @@ class produto {
 			    $count = $db->exec($query1);
 
 			    $idProdutoCadastrado = $db->lastInsertId();
-			    $idVendedor=1; //obter esse valor da sessao
+			    $idVendedor=$_SESSION['user']->getIdUsuario();
 				$query2 = sprintf("INSERT into produto_vendedor (idvendedor,idproduto,datacadastro) VALUES (%d,%d,NOW())",
 																		$idVendedor,
 																		$idProdutoCadastrado);
@@ -429,21 +452,14 @@ class produto {
 			
 			
 
-			$query = sprintf("UPDATE produto SET produto.nome= '%s',produto.descricao='%s',produto.quantidade='%s',produto.preco='%s',produto.linkfoto='%s',produto.datainicio='%s',produto.datatermino='%s',produto.tamanholote='%s',produto.precolote='%s',produto.validadeaposcompra='%s' WHERE idproduto='%d'",
-															mysql_real_escape_string($this->getNome()),
-															mysql_real_escape_string($this->getDescricao()),
-															mysql_real_escape_string($this->getQuantidade()),
-															mysql_real_escape_string($this->getPreco()),
-															mysql_real_escape_string($this->getLinkFoto()),	
-															mysql_real_escape_string($this->getDataInicio()),	
-															mysql_real_escape_string($this->getDataTermino()),	
-															mysql_real_escape_string($this->getTamanhoLote()),	
-															mysql_real_escape_string($this->getPrecoLote()),	
-															mysql_real_escape_string($this->getValidadeAposCompra()),
-															$this->getIdProduto());
+			
 
-		    
-		    $count = $db->exec($query);
+		    $query = $db->prepare("UPDATE produto SET produto.nome= ?,produto.descricao=?,produto.quantidade=?,produto.preco=?,produto.linkfoto=?,produto.datatermino=?,produto.tamanholote=?,produto.precolote=?,produto.validadeaposcompra=? WHERE idproduto=?");
+		    $query->execute(
+		    	array($this->getNome(),$this->getDescricao(),$this->getQuantidade(),
+		    			$this->getPreco(),$this->getLinkFoto(),$this->getDataTermino(),
+		    			$this->getTamanhoLote(),$this->getPrecoLote(),$this->getValidadeAposCompra(),
+		    			$this->getIdProduto()));		    
 		   
 		    $db = null;
 
@@ -486,45 +502,93 @@ class produto {
 			
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 			
-			$idUsuario=1; //obter esse valor da sessao
+			$idUsuario = $_SESSION['user']->getIdUsuario();			
+			//$idUsuario=1; //obter esse valor da sessao
+
 
 			//join eh prod carteziano, ja natural join eh o natural join, de fato
-			if (!$code) 
-				$query = sprintf("SELECT * from produto_cliente pc NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pc.idcliente = %d ",$idUsuario);
+			if (!$code)
+				$string_query = "SELECT * from produto_cliente pc NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pc.idcliente = ? ";
 			else
-				$query = sprintf("SELECT * from produto_vendedor pv NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pv.idvendedor = %d ",$idUsuario);
+				$string_query = "SELECT * from produto_vendedor pv NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pv.idvendedor = ? ";
 			
-			if(!$this->isIdProdutoEmpty())
-				$query .=  sprintf("AND p.idproduto = %d ",$this->getIdProduto());
-			if(!$this->isNomeEmpty())
-				$query .=  sprintf("AND p.nome = '%s' ",mysql_real_escape_string($this->getNome()));
-			if(!$this->isDescricaoEmpty())
-				$query .= sprintf("AND p.descricao = '%s' ",mysql_real_escape_string($this->getDescricao()));
-			if(!$this->isQuantidadeEmpty())
-				$query .= sprintf("AND p.quantidade = %d ",intval(mysql_real_escape_string($this->getQuantidade())));
-			if(!$this->isPrecoEmpty())
-				$query .= sprintf("AND p.preco = '%s' ",mysql_real_escape_string($this->getPreco()));
-			if(!$this->isLinkFotoEmpty())
-				$query .= sprintf("AND p.linkfoto = 's%' ",mysql_real_escape_string($this->getLinkFoto()));
-			if(!$this->isDataInicioEmpty())
-				$query .= sprintf("AND p.datainicio = '%s' ",mysql_real_escape_string($this->getDataInicio()));
-			if(!$this->isDataTerminoEmpty())
-				$query .= sprintf("AND p.datatermino = '%s' ",mysql_real_escape_string($this->getDataTermino()));
-			if(!$this->isTamanhoLoteEmpty())
-				$query .= sprintf("AND p.tamanholote = '%s' ",mysql_real_escape_string($this->getTamanhoLote()));	
-			if(!$this->isPrecoLoteEmpty())
-				$query .= sprintf("AND p.precolote = '%s' ",mysql_real_escape_string($this->getPrecoLote()));	
-			if(!$this->isValidadeAposCompraEmpty())
-				$query .= sprintf("AND p.validadeaposcompra = '%s' ",mysql_real_escape_string($this->getValidadeAposCompra()));
+			$valoresQuery=array($idUsuario);			
+
+			if(!$this->isIdProdutoEmpty()){
+				$string_query .=  "AND p.idproduto = ? ";
+				array_push($valoresQuery,$this->getIdProduto());			
+			}
+
+			if(!$this->isNomeEmpty()){
+				$string_query .=  "AND p.nome = ? ";
+				array_push($valoresQuery,getNome());
+
+			}
+
+			if(!$this->isDescricaoEmpty()){
+				$string_query .= "AND p.descricao = ? " ;
+				array_push($valoresQuery,$this->getDescricao());
+
+			}
+
+			if(!$this->isQuantidadeEmpty()){
+				$string_query .= "AND p.quantidade = ? ";
+				array_push($valoresQuery,$this->getQuantidade());
+			}
+
+			if(!$this->isPrecoEmpty()){
+				$string_query .= "AND p.preco = ? ";
+				array_push($valoresQuery,$this->getPreco());
+
+			}
+
+			if(!$this->isLinkFotoEmpty()){
+				$string_query .= "AND p.linkfoto = ? ";
+				array_push($valoresQuery,$this->getLinkFoto());
+			}
+
+			if(!$this->isDataInicioEmpty()){				
+				$string_query .= "AND p.datainicio = ? ";
+				array_push($valoresQuery,$this->getDataInicio());
+
+			}
+
+			if(!$this->isDataTerminoEmpty()){
+				$string_query .= "AND p.datatermino = ? ";
+				array_push($valoresQuery,$this->getDataTermino());
+
+			}
+
+			if(!$this->isTamanhoLoteEmpty()){
+				$string_query .= "AND p.tamanholote = ? ";
+				array_push($valoresQuery,$this->getTamanhoLote());
+				
+
+			}
+
+			if(!$this->isPrecoLoteEmpty()){				
+				$string_query .= "AND p.precolote = ? ";
+				array_push($valoresQuery,$this->getPrecoLote());
+
+			}
+
+			if(!$this->isValidadeAposCompraEmpty()){
+
+				$string_query .= "AND p.validadeaposcompra = ? "; //
+				array_push($valoresQuery,$this->getValidadeAposCompra());
+
+			}
 			
 			
-		    $result = $db->query($query);
+		    $query = $db->prepare($string_query);
+
+		    $query->execute($valoresQuery);
+		    $result=$query->fetchAll();
 		    
 		    $db = null;//fecha conexao
 
-		    if (!$result)
-		    	return -1;
-		    else return $result;
+		   
+		    return $result;
 
 		} catch (Exception $e) {
 
@@ -593,22 +657,23 @@ class produto {
  		
  		//adicionar assim que acrescentarmos sessao com usuario
  		//if(empty($_SESSION['usuario'].id)) return -1;
- 		//$idUsuario=$_SESSION['usuario'].id;
- 		$idUsuario=1;
+ 		
+ 		$idUsuario=$_SESSION['user']->getIdUsuario();
+ 		//$idUsuario=1;
 
 		try {
 			
 			//conecta na base base
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 
-			$query = sprintf("SELECT p.* from produto_cliente pc NATURAL JOIN produto p on pc.idcliente = %d ",$idUsuario);
-		    //Insere. Funcao retorna o numero de linhas afetadas			    
-		    $result = $db->query($query);		    
+			$string_query = "SELECT p.* from produto_cliente pc NATURAL JOIN produto p on pc.idcliente = ?";
+		    
+		    $query=$db->prepare($string_query);		    
+		    $query->execute(array($idUsuario));
+		    $result = $query->fetchAll();   
 		    
 		    $db = null;//fecha conexao
-		    if (!$result) 
-		    	return -1;
-		    else return $result;
+		    return $result;
 
 		} catch (Exception $e) {
 		    return ERRO__MYSQL__FALHACONEXAO;
@@ -634,22 +699,24 @@ class produto {
  		
  		//adicionar assim que acrescentarmos sessao com usuario
  		//if(empty($_SESSION['usuario'].id)) return -1;
- 		//$idUsuario=$_SESSION['usuario'].id;
- 		$idUsuario=1;
+ 		$idUsuario=$_SESSION['user']->getIdUsuario();
+ 		//$idUsuario=1;
 
 		try {
 						
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 
 			//obs, join nao esta retornando id do usuario(apenas os campos de produto)
-			$query = sprintf("SELECT p.* from produto_vendedor pv NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pv.idvendedor = %d",$idUsuario);
+			$string_query = "SELECT p.* from produto_vendedor pv NATURAL JOIN produto p WHERE p.excluidovendedor = 0 AND pv.idvendedor = ?";
 		    
-		    $result = $db->query($query);		    
-		    
-		    $db = null;//fecha conexao
-		    if (!$result)
-		    	return -1;
-		    else return $result;
+
+		    $query=$db->prepare($string_query);		    
+		    $query->execute(array($idUsuario));
+		    $result = $query->fetchAll();
+
+		    $db = null;//fecha conexao		    
+
+		    return $result;
 
 		} catch (Exception $e) {
 		    return ERRO__MYSQL__FALHACONEXAO;
@@ -681,14 +748,16 @@ class produto {
 			//conecta na base base
 			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
 
-			$query = "SELECT * from produto";
-		    //Insere. Funcao retorna o numero de linhas afetadas			    
-		    $result = $db->query($query);		    
+			$string_query = "SELECT distinct u.nome as nomevendedor, p.*,pv.* from produto_vendedor  pv JOIN produto  p JOIN usuario  u WHERE p.excluidovendedor = 0 and p.idproduto=pv.idproduto and u.idusuario=pv.idvendedor";
+
 		    
+		    $query = $db->prepare($string_query);		    
+		    $query->execute();
+		    $result=$query->fetchAll();
+		    //var_dump($result);
 		    $db = null;//fecha conexao
-		    if (!$result) 
-		    	return -1;
-		    else return $result;
+		    
+		    return $result;
 
 		} catch (Exception $e) {
 		    return ERRO__MYSQL__FALHACONEXAO;

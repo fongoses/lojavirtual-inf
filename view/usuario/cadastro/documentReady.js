@@ -1,7 +1,9 @@
+
 $(document).ready(function(){
 	
 
-	$('#modalWindow').modal('show');
+	$('#modalWindow').modal({backdrop: 'static',
+  keyboard: false},'show');
 
 
 

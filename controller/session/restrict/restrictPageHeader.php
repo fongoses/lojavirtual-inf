@@ -18,8 +18,7 @@ if(!defined("__MVCPATHS__")) {
 	
 }
 include($CONTROLLERPATH.'/session/restrict/sessionControl.php');
-include("./sessionControl.php");
-header('Content-Type: text/html; charset=UTF-8');
+
  
  
 //controla Acesso de usuario
@@ -31,30 +30,27 @@ if (isset($_SESSION['sessionControl'])){
 	$sessionControl = $_SESSION['sessionControl'];
 	//$sessionControl->logoutUser();	
 	
-	
-	
 	//controla seu acesso
 	$sessionControl->controlAccess();
-	
-	echo 'bbb';			
+
+
+				
 			
 }else { 
 	
-	echo '<script type="text/javascript"> alert("Você não está logado!");location.href="../../../home"</script>';		
+	echo '<script type="text/javascript"> alert("Você não está logado!");location.href="http://localhost/lojavirtual/view"</script>';		
 	exit();
 }
 	
 
 //verifica inatividade do usuario
-if ($sessionControl->isInactive()){
-		
+if ($sessionControl->isInactive()){		
 		
 	$sessionControl->logoutUser();				
-	echo '<script type="text/javascript"> alert("Sessão Expirada.");location.href="../../../home"</script>';
+	echo '<script type="text/javascript"> alert("Sessão Expirada.");location.href="http://localhost/lojavirtual/view"</script>';
 	exit();
 	
 }
-	
-	
+
  
 ?>

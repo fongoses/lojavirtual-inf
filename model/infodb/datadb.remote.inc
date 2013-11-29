@@ -9,10 +9,10 @@
 if(!defined("__DATADBINCPHP__")) {
 	define("__DATADBINCPHP__", "true");
  
- define(ENDERECOBASE,'autophernaliacom.ipagemysql.com'); 
- define(BASEDADOS,'autophernalialoja');
- define(USUARIOBASE,'autophernaliaweb');
- define(SENHA,'cancela123'); 
+ define("ENDERECOBASE",'autophernaliacom.ipagemysql.com'); 
+ define("BASEDADOS",'autophernalialoja');
+ define("USUARIOBASE",'autophernaliaweb');
+ define("SENHA",'cancela123'); 
 
 }?>
 

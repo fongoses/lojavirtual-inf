@@ -13,7 +13,7 @@ if(!defined("__USERPHP__")) {
 	if(!defined("__MVCPATHS__")) {
 		define("__MVCPATHS__", "true");
 	
-		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'lojavirtual';
+		$MAINPATH=$_SERVER['DOCUMENT_ROOT'].'/lojavirtual';
 	 	$CONTROLLERPATH=$MAINPATH.'/controller';
 	 	$MODELPATH = $MAINPATH.'/model';
 	
@@ -21,7 +21,7 @@ if(!defined("__USERPHP__")) {
 	
 
 	
-	include(dirname(__FILE__).'/userConfig.php');	
+	include(dirname(__FILE__).'/configUsuario.php');	
 	include($MODELPATH.'/infodb/datadb.inc');					
 	include($CONTROLLERPATH.'/errors/errors.php');
 	
@@ -114,7 +114,7 @@ if(!defined("__USERPHP__")) {
  		
  		//consistencia de dados eh client-side (via javascript)
  		
-		$this->setEmail($_POST['email']); 		
+		$this->setEmail($_POST['login']); 		
 		$this->setPass(md5($_POST['pass'])); //Segurança: criptografa password com md5			
  		unset($_POST['pass']); //segurança: apaga password
  		
@@ -124,7 +124,7 @@ if(!defined("__USERPHP__")) {
  		
  	}
  	
- 	public function getUsuarioCompletoDataAndStoreInTheSession(){
+ 	public function getCompleteUserDataAndStoreInTheSession(){
  		/*
  		 * Obtem usuario atual em $_SESSION['user'], recupera todas suas informacoes
  		 * no DB e regrava novamente em $_SESSION['user']
@@ -141,19 +141,7 @@ if(!defined("__USERPHP__")) {
  		 	$usuarioCompleto = $_SESSION['user'];
  		 	
  		 	
- 		 	//copy fields
- 		 	//$usuarioCompleto->setEmail($usuarioBase->getEmail()); 		 	
- 		 	//$usuarioCompleto->setPass($usuarioBase->getPass());
  		 	
- 		 	
- 		 	
- 		 	//query the DB and
- 		 	//copy the remaining fields
- 		 	/*
- 		 	 * 
- 		 	 * later...
- 		 	 * 
- 		 	 */
  		 	
  		 	$_SESSION['user'] = $usuarioCompleto; 		 	
  		 } 		
@@ -212,81 +200,43 @@ if(!defined("__USERPHP__")) {
 	 		 	 		 	
 	 		 $_SESSION['user'] = $usuarioCompleto; 		 	
  		 }*/ 
- 		 	 @session_start();
+ 		 	@session_start();
  		 	 
-	 		 if(isset($_SESSION['sessionControl'])){
-	 		 	
-	 		 	
-	 		 	
-	 		 	
-	 		 	
+	 		if(isset($_SESSION['sessionControl'])){
+		 		$result=$this->select();
 
-	 		 	//conect in mysql
-				$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-				if (!$db)
-				{	
-									
-					return -1;
-					
-				
-				}
-				//
-				mysql_selectdb(BASEDADOS,$db);
-				
-				//charset
-				mysql_query("SET NAMES 'utf8'");
-				mysql_query('SET character_set_connection=utf8');
-				mysql_query('SET character_set_client=utf8');
-				mysql_query('SET character_set_results=utf8');
-				
-				
-				
-				$query = sprintf("SELECT * FROM vendedor WHERE (email = '%s') and (senha = '%s') ",
-																		mysql_real_escape_string($this->email),
-																		mysql_real_escape_string($this->pass)); //pass foi unsetado pela funcao que leu dados do form na hora de registar(getRegisterFormFieldsSafely). Solução: fazer uma função para obter os dados do usuario, se possivel, sem a necessidade de confirmar o password. Sugestao: em vez da verificacao por password, testar somente a validade da sessao. O pass geralmente soh eh verificado em areas mais importantes da sessao restrita
-																		
-														
-														
-														//echo $query;
-														
-														//realiza a consulta
-														$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Usuário ou senha inválidos! Tente novamente!");location.href="../../login.php"</script>');								
-														if (!$result){
-															return 0;
-														}
-		 		 
-		 		 //if user exists in database, get user data and starts a session with it	 		 
-		 		 $usuarioCompleto = new usuarioCompleto();
-		 		 
-		 		
-		 		 $row =  mysql_fetch_array($result,MYSQL_NUM); //obtem a primeira linha, armazena em row, e incrementa o ponteiro da tabela resultante		 		 
-		 		 
-		 		 if (!$row){
+		 		if (!$result){
 		 		 	
-		 		 	//doesnt exists in database
+		 			//doesnt exists in database
 		 		 	return 0;
-		 		 	
-		 		 	
-		 		 	
-		 		 }
+
+		 		}
 		 		
 		 		
-		 		 //echo '<script type="text/javascript"> alert("'.$this->login.'")</script>';exit;	
-		 		 
-		 		 //get user data
-		 		 $usuarioCompleto->setName($row[1]); //coluna 0 eh a id/PK
-		 		 $usuarioCompleto->setEmail($row[3]);
-		 		 //echo '<script type="text/javascript"> alert("'.$usuarioCompleto->getLogin().'")</script>';exit;
-		 		 //echo '**'.$row[0].'**<br/>';
-		 		 //$usuarioCompleto->setPass($row[3]);//em principio,nao ira precisar do pass na sessao. Caso necessite a senha para uma operacao mais segura, serah feita uma nova solicitacao e uma consulta ao BD
-		 		 
+		 		//if user exists in database, get user data and starts a session with it	 		 
+		 		$usuarioCompleto = new usuarioCompleto();
+
+		 		//armazena dados do usuario na sessao.
+		 		$userdata=$result[0];
+		 		$usuarioCompleto->setIdUsuario($userdata['idusuario']); 
+		 		$usuarioCompleto->setName($userdata['nome']); 
+		 		$usuarioCompleto->setEmail($userdata['email']);
+		 		$usuarioCompleto->setAddress($userdata['endereco']);
+		 		$usuarioCompleto->setCity($userdata['cidade']);
+		 		$usuarioCompleto->setIdUf($userdata['iduf']);
+		 		$usuarioCompleto->setIdPais($userdata['idpais']);
+		 		$usuarioCompleto->setZip($userdata['cep']);
+		 		$usuarioCompleto->setBirthday($userdata['nascimento']);
+		 		$usuarioCompleto->setCpf($userdata['cpf']);
+		 		
+
+
 		 		 
 		 		 
 						 		 		 	
-		 		 $_SESSION['user'] = $usuarioCompleto;
-		 		 
-		 		 mysql_close();
-		 		 return 1;
+		 		$_SESSION['user'] = $usuarioCompleto;		 		 
+		 		
+		 		return 1;
 	 		 } 		 		
  	}
  
@@ -299,40 +249,57 @@ if(!defined("__USERPHP__")) {
  		 * Verify if the current user uses the database
  		 * 
  		 */
- 
- 		//conect in mysql
-		$db=mysql_pconnect(ENDERECOBASE,USUARIOBASE,SENHA);
-		if (!$db)
-		{	
-							
-			return -1;
+
+ 		try {
 			
-		
-		}
-		//
-		mysql_selectdb(BASEDADOS,$db);
-		
-		
-		
-		$query = sprintf("SELECT * FROM vendedor WHERE (email = '%s')",
-																mysql_real_escape_string($this->email)); //pass foi unsetado pela funcao que leu dados do form na hora de registar(getRegisterFormFieldsSafely). Solução: fazer uma função para obter os dados do usuario, se possivel, sem a necessidade de confirmar o password. Sugestao: em vez da verificacao por password, testar somente a validade da sessao. O pass geralmente soh eh verificado em areas mais importantes da sessao restrita
-																
-												
-												
-		//echo $query;
-		
-		//realiza a consulta
-		$result = mysql_query($query);// or die('<script type="text/javascript"> alert("Usuário ou senha inválidos! Tente novamente!");location.href="../../login.php"</script>');								
-		if (!$result){
-						return 0;
-		}
- 
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+			
+			$query = $db->prepare("SELECT * FROM usuario WHERE (email = 'mariogasparoni@gmail.com')");
+			
+			$query->execute(array($this->getEmail()));
+			$result = $query->fetchAll();
+			
+		    $db = null;//fecha conexao
+
+		    if(!$result) return 0;
+		    return 1; //1:sucesso
+
+		} catch (Exception $e) {		    
+		    
+		    return 0;
+
+		}		
+ 	}
+
+
+ 	public function select(){
  		
-		mysql_close();
-		return 1;
- 
- 
- 
+ 		/*
+ 		 * 
+ 		 * Verify if the current user uses the database
+ 		 * 
+ 		 */
+
+ 		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);
+			
+			$query = $db->prepare("SELECT * FROM usuario WHERE (email = ?)");
+			
+			$query->execute(array($this->getEmail()));
+			$result = $query->fetchAll();
+			
+		    $db = null;//fecha conexao
+
+		    return $result;	    
+
+		} catch (Exception $e) {		    
+		    
+		    return NULL;
+
+		}		
  	}
  	
  	
@@ -368,9 +335,10 @@ class usuarioCompleto extends usuarioBase{
  	
 	function __construct(){
  		
- 		parent::__construct();
- 		//$this->email = '';
- 		$this->name = '';		
+ 		parent::__construct(); 		
+ 		$this->idUsuario=-1;
+ 		$this->name = '';
+		$this->email = '';
  		$this->address = '';		
 		$this->city = '';		
 		$this->iduf = '';		
@@ -378,10 +346,26 @@ class usuarioCompleto extends usuarioBase{
 		$this->zip = '';
 		$this->birthday = '';
 		$this->cpf = '';
-		$this->admin = false;		
+		$this->admin = false;	
  	}
  	
  	
+ 	public function getIdUsuario(){ 		
+ 		return $this->idUsuario;		
+ 		
+ 	} 	
+ 	
+ 	public function setIdUsuario($inputId){
+ 		$this->idUsuario=$inputId;
+ 		
+ 	}
+ 	
+ 	public function isIdUsuarioEmpty(){
+ 		
+ 		if ($this->idUsuario < 0) return true;	
+ 		return false;
+ 		
+ 	}
  	
  
  	
@@ -606,7 +590,41 @@ class usuarioCompleto extends usuarioBase{
  		$this->setZip($_POST['cep']);
  		$this->setBirthday($_POST['nascimento']);
 		$this->setCpf($_POST['cpf']);
-		$this->setAdmin($_POST['admin']);
+		$this->setAdmin(true);
+		
+
+ 	}
+
+
+
+ 	public function getUpdateFormFieldsSafely(){
+ 		
+ 		/*
+ 		 * Get's all the form fields needed to subscription.
+ 		 * Stores it in this class.
+ 		 * 
+ 		 */
+ 		
+ 		
+ 		//consistencia de dados eh client-side (via javascript)
+ 		
+		if(!empty($_POST['pass'])){
+			$this->setPass(md5($_POST['pass'])); //Segurança: criptografa password com md5			
+ 			unset($_POST['pass']); //segurança: apaga password
+ 			
+		}else $this->setPass('');
+		
+
+		
+ 		$this->setName($_POST['nome']);		
+ 		$this->setAddress($_POST['endereco']); 		
+ 		$this->setCity($_POST['cidade']);
+ 		$this->setIdUf($_POST['uf']);
+ 		$this->setIdPais($_POST['pais']);
+ 		$this->setZip($_POST['cep']);
+ 		$this->setBirthday($_POST['nascimento']);
+		$this->setCpf($_POST['cpf']);
+		$this->setAdmin(true);
 		
 
  	}
@@ -677,8 +695,50 @@ class usuarioCompleto extends usuarioBase{
 		
 		//echo $result;
  		
- 	}	
+ 	}
+
+
+
+ 	public function update(){
  		
-}
+ 		/*
+ 		 * Update User in the Database
+ 		 * 
+ 		 * 
+ 		 */
+ 		
+ 		
+ 		try {
+			
+			//conecta na base base
+			$db = new PDO("mysql:host=".ENDERECOBASE.";dbname=".BASEDADOS, USUARIOBASE, SENHA);			
+
+		    $query = $db->prepare("UPDATE usuario SET nome=?,senha=?,endereco=?,cidade=?,iduf=?,idpais=?,cep=?,nascimento=?,cpf=? WHERE idusuario=?");
+		    $query->execute(
+		    	array($this->getName(),$this->getPass(),$this->getAddress(),
+		    			$this->getCity(),$this->getIdUf(),$this->getIdPais(),
+		    			$this->getZip(),$this->getBirthday(),$this->getCpf(),
+		    			$this->getIdUsuario()));
+
+		    $db = null;
+
+		    return 1; 
+
+		} catch (Exception $e) {
+		    return ERRO__MYSQL__FALHACONEXAO;
+		}	
+ 		
+ 	}
+
+
+
+ 	
+ 	
+ 	
+ 
+
+
+ 		
+}//fim classe
 
 }?>

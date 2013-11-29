@@ -7,6 +7,7 @@
     <!-- StyleSheets  -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"></link>
     <link rel="stylesheet" type="text/css" href="css/mainstyle.css"></link>
+    <link rel="stylesheet" type="text/css" href="css/smartstyle.css"></link>
     
 
     <!-- Carrega Scripts -->
@@ -34,19 +35,19 @@
             <div class="account-wall">
                 <img class="profile-img" src="img/logo.png"
                     alt="">
-                <form class="form-signin">
-                <input type="text" class="form-control" placeholder="Email" required autofocus>
-                <input type="password" class="form-control" placeholder="Password" required>
+                <form class="form-signin" method="post" id="loginform" >
+                <input type="text" class="form-control" placeholder="Email" id="login" name="login" required autofocus>
+                <input type="password" class="form-control" placeholder="Senha" id="pass" name="pass" required>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                     Entrar</button>
                 <label class="checkbox pull-left">
                     <input type="checkbox" value="remember-me">
                     Lembrar senha
                 </label>
-                <a href="#" class="pull-right need-help">Precisa de ajuda? </a><span class="clearfix"></span>
+                <a href="usuario/recuperasenha" class="pull-right need-help">Esqueceu a senha? </a><span class="clearfix"></span>
                 </form>
             </div>
-            <a href="#" class="text-center new-account">Criar uma conta </a>
+            <a href="usuario/cadastro" class="text-center new-account">Criar uma conta </a>
         </div>
     </div>
 </div>

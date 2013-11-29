@@ -1,10 +1,8 @@
-
 $(document).ready(function(){
 	
 
-	$('#modalWindow').modal({backdrop: 'static',
+$('#modalWindow').modal({backdrop: 'static',
   keyboard: false},'show');
-
 
 
 });

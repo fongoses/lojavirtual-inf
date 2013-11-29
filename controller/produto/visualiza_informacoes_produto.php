@@ -19,16 +19,15 @@
 
  	
  	/* --Includes/Imports---------------------------------------------*/
- 	include($CONTROLLERPATH.'/session/restrict/sessionControl.php');
+ 	include($CONTROLLERPATH.'/session/restrict/restrictPageHeader.php');
  	include($CONTROLLERPATH.'/errors/errors.php');
- 	include($MODELPATH.'/produto/produto.php');
- 	
+ 	include($MODELPATH.'/produto/produto.php'); 	
  	header('Content-Type: text/html; charset=UTF-8');
  	 	
   	//echo '<script type="text/javascript"> alert("aaa") </script>'
  	/* --Methods-----------------------------------------------------*/
  	
- 	$idProduto = intval(mysql_real_escape_string($_POST['idproduto']));
+ 	$idProduto = intval($_POST['idproduto']);
  	
 
  	$produto = new produto();
@@ -37,26 +36,135 @@
  	//if($produto->belongsToUser($_SESSION['user']->getName()))
  		$produtoSelecionado = $produto->select(1);
  	
-
- 	echo "<h2>Informacoes do Produto:</h2><hr>";
- 	echo "<table>".			
-			"<form name='productEditionForm' method=post action=\"../../controller/produto/atualiza_produto.php\">";
-
-
- 	foreach ($produtoSelecionado as $cadaProduto)
-			echo"<tr><td>Identificador:</td><td>".$cadaProduto['idproduto']."<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/></td></tr>".
-				"<tr><td>Nome: </td><td><input type=\"text\" name=\"nome\" value=\"".$cadaProduto['nome']."\"/></td></tr>".
-				"<tr><td>Descricao: </td><td><input type=\"text\" name=\"descricao\" value=\"".$cadaProduto['descricao']."\"/></td></tr>".
-				"<tr><td>Quantidade: </td><td><input type=\"text\" name=\"quantidade\" value=\"".$cadaProduto['quantidade']."\"/></td></tr>".
-				"<tr><td>Preco: </td><td><input type=\"text\" name=\"preco\" value=\"".$cadaProduto['preco']."\"/></td></tr>".
-				"<tr><td>Foto: </td><td><input type=\"text\" name=\"linkfoto\" value=\"".$cadaProduto['linkfoto']."\"/></td></tr>".
-				"<tr><td>Venda iniciada em: </td><td><input type=\"text\" name=\"datainicio\" disabled=true value=\"".$cadaProduto['datainicio']."\"/></td></tr>".
-				"<tr><td>Venda finaliza em: </td><td><input type=\"text\" name=\"datatermino\" value=\"".$cadaProduto['datatermino']."\"/></td></tr>".
-				"<tr><td>Tamanho do Lote: </td><td><input type=\"text\" name=\"tamanholote\" value=\"".$cadaProduto['tamanholote']."\"/></td></tr>".
-				"<tr><td>Preco do Lote: </td><td><input type=\"text\" name=\"precolote\" value=\"".$cadaProduto['precolote']."\"/></td></tr>".
-				"<tr><td>Validade Apos Compra: </td><td><input type=\"text\" name=\"validadeaposcompra\" value=\"".$cadaProduto['validadeaposcompra']."\"/></td></tr>".
-				"<tr><td><input type='submit' value=\"Salvar\"/></td</tr>";	
-
-	echo "</form></table>";
 ?>
 
+<!DOCTYPE html>
+<html>
+<head>
+       
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   
+    <!-- StyleSheets  -->
+    <link rel="stylesheet" type="text/css" href="../../view/css/bootstrap.min.css"></link>    
+    <link rel="stylesheet" type="text/css" href="../../view/css/mainstyle.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../view/css/smartstyle.css"></link>
+
+    <!-- Carrega Scripts -->
+    <script src="../../view/js/jquery.js" type="text/javascript"></script> 
+    <script src="../../view/js/bootstrap.min.js" type="text/javascript"></script> 
+    
+    
+       
+       
+       
+       
+<title>Cadastro</title>
+</head>
+
+<body>
+
+
+<?php
+
+	include($CONTROLLERPATH.'/session/restrict/barra_usuario.php');  
+	$produtoSelecionado=$produtoSelecionado[0];
+	
+	echo "<div class='container'>";
+	echo "<form role=\"form\" id='formEdicao' action='../produto/atualiza_produto.php' method='post'>
+                            
+							<div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Identificador</label>
+                                    <input type='text' name='idproduto' class=\"form-control\" placeholder=\"Id\" value=\"".$produtoSelecionado['idproduto']."\"/>
+                                </div>
+                            </div>
+
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Nome do Produto*</label>
+                                    <input type='text' name='nome' class=\"form-control\" placeholder=\"Nome\" value=\"".$produtoSelecionado['nome']."\"/>
+                                </div>
+                            </div>
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Descrição</label>
+                                    <input type='text' name='descricao' class=\"form-control\" placeholder=\"Descricao\" value=\"".$produtoSelecionado['descricao']."\"/>
+                                </div>
+                            </div>
+
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Quantidade *</label>
+                                    <input type='text' name='quantidade' class=\"form-control\" placeholder=\"Quantidade\" value=\"".$produtoSelecionado['quantidade']."\"/>
+                                </div>
+                            </div>
+
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Preço*</label>
+                                    <input type='text' name='preco' class=\"form-control\" placeholder=\"Preco\" value=\" ".$produtoSelecionado['preco']."\"/>
+                                </div>
+                            </div>
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Foto</label>
+                                    <input type='text' name='linkfoto' class=\"form-control\" placeholder=\"Link para a foto\" value=\"".$produtoSelecionado['linkfoto']."\" />
+                                </div>
+                            </div>
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Início da Venda</label>
+                                    <input type='text' name='datainicio' class=\"form-control\" placeholder=\"Data de Inicio\" value=\"".$produtoSelecionado['datainicio']."\" />
+                                </div>
+                            </div>
+
+                             <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Término da Venda</label>
+                                    <input type='text' name='datatermino' class=\"form-control\" placeholder=\"Data de Termino\" value=\"".$produtoSelecionado['datatermino']."\" />
+                                </div>
+                            </div>
+
+                             <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Tamanho do Lote</label>
+                                    <input type='text' name='tamanholote' class=\"form-control\" placeholder=\"Tamanho do Lote\" value=\"".$produtoSelecionado['tamanholote']."\" />
+                                </div>
+                            </div>
+
+                             <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Preço do lote</label>
+                                    <input type='text' name='precolote' class=\"form-control\" placeholder=\"Preço\" value=\"".$produtoSelecionado['precolote']."\"/>
+                                </div>
+                            </div>
+                            
+                             <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <label for=\"code\">Validade de uso</label>
+                                    <input type='text' name='validadeaposcompra' class=\"form-control\" placeholder=\"Validade\" value=\"".$produtoSelecionado['validadeaposcompra']."\" />
+                                </div>
+                            </div>
+
+                            <div class=\"row\">
+                                <div class=\"form-group col-lg-5\">
+                                    <button type=\"submit\" class=\"btn btn-primary pull-right\">Atualizar</button></div>
+                                </div>
+                            
+                          </div>
+
+                        </form></div>";
+
+
+
+ 	
+?>
+
+</body>
+</html>

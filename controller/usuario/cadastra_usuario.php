@@ -15,11 +15,11 @@
 	}
  	 	
 
- 	/* --Includes/Imports---------------------------------------------*/ 	
- 	
+ 	/* --Includes/Imports---------------------------------------------*/ 	 	
  	include($CONTROLLERPATH.'/session/restrict/sessionControl.php');  	
  	include($CONTROLLERPATH.'/errors/errors.php');
  	include($MODELPATH.'/usuario/usuario.php');
+ 	
  	
 
  	header('Content-Type: text/html; charset=UTF-8');
@@ -45,7 +45,7 @@
  	} 	
  	
  	if ($resultado > 0) {
-		echo '<script type="text/javascript"> alert("Cadastro realizado com sucesso! Efetue o login!");location.href="../../view/usuario/cadastro/"</script>;';
+		echo '<script type="text/javascript"> alert("Cadastro realizado com sucesso! Efetue o login!");location.href="../../view/"</script>;';
 		return;
 	}	
 	exit();

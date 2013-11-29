@@ -25,7 +25,7 @@ define("__SESSIONCONTROLPHP__", "true");
  
 
 
-include($MODELPATH."/user/user.php");
+include($MODELPATH."/usuario/usuario.php");
 
 /*
 $ALREADY_STARTED_SESSION = -1;
@@ -99,32 +99,25 @@ $VALID_LOGIN = 1;
  		 */
  		
  		@session_start(); //em cada script eh necessario chamar session_start para manipular as vars da sessao. '@' nao exibe warning de 'sessao ja existe'
- 		//se nÃ£o existe sessao ativa, loga
+ 		//se nao existe sessao ativa, loga
  		
 		if (!isset($_SESSION['sessionControl'])) {
-		
-		
+				
+				
 				$_SESSION['sessionControl'] = new $this;						
 				
-				$loginUser = new baseUser();			
+				$loginUser = new usuarioBase();			
 				$loginUser->getLoginFormFieldsSafely(); //getUser information from html form and store in this user
 				
-								
+				
 				
 				//verifica se o usuario existe no DB
 				 switch ($loginUser->verifyUser())				 
 				 {
 					case 1:			
-					
-					 		//manda o usuario para a pagina principal apos logado
-							//na propria pagina welcome.php eh feito o controle de acesso do usuario
-							//$_SESSION['user'] = serialize($loginUser); //php serializa variaveis da sessao automaticamente
+							//usuario logado.
+					 		//dados ja armazenados na sessao
 							
-							
-							
-							
-							//recupera TODAS informacoes do usuario no banco de dados, gravando na session
-							$loginUser->getCompleteUserDataAndStoreInTheSession();							
 							
 													
 						 	return 1;
@@ -159,6 +152,7 @@ $VALID_LOGIN = 1;
 		}else{
 			//unset($_SESSION['sessionControl']); //tirar
 			//se existe sessao ativa
+
 			return -2;
 			
 			
@@ -202,11 +196,11 @@ $VALID_LOGIN = 1;
  	public function createUserAndTestIfIsThereBlankField(){
  		
  		
-		 		$loginUser = new baseUser();	
+		 		$loginUser = new usuarioBase();	
 		 
 				//obtem dados do formulario
-				$loginUser->setEmail($_POST['loginEmailField']);
-				$loginUser->setPass(md5($_POST['loginPassField'])); //Seguranï¿½a: criptografa password com md5
+				$loginUser->setEmail($_POST['login']);
+				$loginUser->setPass(md5($_POST['pass'])); //Seguranï¿½a: criptografa password com md5
 				//nao dar unset no $_POST['loginPassField'] ainda pois ele eh utilizado mais adiante em sessionControl->loginUser()
 		 		
 			 	
@@ -237,7 +231,7 @@ $VALID_LOGIN = 1;
 		   	@session_start();
 		     
 		    // tempo maximo de inatividade do usuario, em segundos
-		    $inactive = 30;
+		    $inactive = 300;
 		     
 		    // check to see if $_SESSION['timeout'] is set
 		    if(isset($_SESSION['lastActivityTime']) ) {
@@ -275,10 +269,12 @@ $VALID_LOGIN = 1;
  			@session_start();
 			//caso haja uma sessao aberta 		
  			if (isset($_SESSION['sessionControl'])){
+
  					
 					/*inicializa variaveis de sessao*/
 					//$loggedUser = unserialize($_SESSION['user']); //php serializa variaveis da sessao automaticamente
  					if (isset($_SESSION['user'])) {
+
  						$loggedUser = $_SESSION['user'];
  						
  						} else{exit();}
@@ -289,8 +285,8 @@ $VALID_LOGIN = 1;
 					/*valida*/
 				 	switch($loggedUser->validateUser()){
 				 		
-				 		case -1: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("Falha na conexÃ£o com o sistemaa! Tente novamente!");location.href="../../../home"</script>';exit;
-				 		case 0: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("UsuÃ¡rio ou senha invÃ¡alidos! Tente novamente!");location.href="../../../home"</script>';exit;
+				 		case -1: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("Falha na conexãoo com o sistema! Tente novamente!");location.href="../../../home"</script>';exit;
+				 		case 0: unset($_SESSION['sessionControl']);unset($_SESSION['user']);echo '<script type="text/javascript"> alert("Usuário ou senha inválidos! Tente novamente!");location.href="../../../home"</script>';exit;
 				 		case 1: break; //case sucessfull(user exists), do nothing, just let the rest of the page loads
 				 						//Consideration: here, we expect that user already logged in the session and $_SESSION['user'] var already is set with all user data(Which is supposed to happen in the user's login, sessionControl->loginUser())
 				 	}	
@@ -302,7 +298,7 @@ $VALID_LOGIN = 1;
 				 	
 				 	
 						 	//exibe alerta e redireciona
-						 	echo '<script type="text/javascript"> alert("VocÃª nÃ£o estÃ¡ logado.");location.href="../../../home"</script>;';	
+						 	echo '<script type="text/javascript"> alert("Você não está logado.");location.href="../../../view"</script>;';	
 						   	exit(); 
 						   	
 			}

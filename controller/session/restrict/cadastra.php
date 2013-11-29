@@ -29,7 +29,7 @@
  	
  	$newUser->registerUser(); //get data from the form and regiser in the db
 
- 	echo '<script type="text/javascript"> alert("Cadastro realizado com sucesso! Efetue o login!");location.href="../../../"</script>;';		
+ 	echo '<script type="text/javascript"> alert("Cadastro realizado com sucesso! Efetue o login!");location.href="../../../"</script>;';
 	exit();
  	
  	
