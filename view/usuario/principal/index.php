@@ -66,12 +66,12 @@
                   
           echo "<div class=\"col-sm-6 col-md-4\"> 
           <div class=\"thumbnail\">
-              <img src=\"../../img/semfoto.png\"/>
+              <img src=\"".(($cadaProduto['linkfoto']=='')?'../../img/semfoto.png':$cadaProduto['linkfoto'])."\"/>
               <div class=\"caption\">
                   <h3>".$cadaProduto['nome']."</h3>
                   <h4>".$cadaProduto['nomevendedor']."</h4>
                   <p>".$cadaProduto['descricao']."</p>                  
-                  <a href=\"#\" class=\"btn btn-primary\" role=\"button\">Visualizar</a>                     
+                  <a href=\"#\" class=\"btn btn-primary\" role=\"button\">Comprar</a>                     
                   
               </div>
           </div>

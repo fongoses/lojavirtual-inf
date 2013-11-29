@@ -79,35 +79,35 @@
                             <div class=\"col-xs-2 col-md-1\">
                                 <img src=\"http://placehold.it/80\" class=\"img-circle img-responsive\" alt=\"\" /></div>
                             <div class=\"col-xs-10 col-md-11\">
-                                <div><h4>"                                    
+                                <h4>"                                    
                                     .$cadaProduto['nome'].
                                     "</h4>
                                     <h5>"                                    
                                     .$cadaProduto['descricao'].
                                     "</h5>
-                                  <div class=\"mic-info\">
+                                  	<div class=\"mic-info\">
                                         Cadastrado em: ".$cadaProduto['datainicio']."
                                     </div>
-                                </div>
+                                
                                 <div class=\"comment-text\">
                                     Quantidade:".$cadaProduto['quantidade']."
                                 </div>
                                 <div class=\"action\">
 
-                                	<form id='productEditForm' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">
+                                	<form id='productEditForm_".$cadaProduto['idproduto']."' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">
 										<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/> 
     								</form>
 
-    								<form id='productDeleteForm' method=post action=\"../../../controller/produto/deleta_produto.php\">
+    								<form id='productDeleteForm_".$cadaProduto['idproduto']."' method=post action=\"../../../controller/produto/deleta_produto.php\">
 										<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>    									
     								
     								</form>
     			
-									<button type=\"button\" class=\"btn btn-primary btn-xs\" title=\"Editar\" onclick=\"document.getElementById('productEditForm').submit();\">                                        
+									<button type=\"button\" class=\"btn btn-primary btn-xs\" title=\"Editar\" onclick=\"document.getElementById('productEditForm_".$cadaProduto['idproduto']."').submit();\">                                        
                                         <span class=\"glyphicon glyphicon-pencil\"></span>
                                     </button> 
 
-                                    <button type=\"button\" class=\"btn btn-danger btn-xs\" title=\"Apagar\" onclick=\"document.getElementById('productDeleteForm').submit();\">
+                                    <button type=\"button\" class=\"btn btn-danger btn-xs\" title=\"Apagar\" onclick=\"document.getElementById('productDeleteForm_".$cadaProduto['idproduto']."').submit();\">
                                         <span class=\"glyphicon glyphicon-trash\"></span>
                                     </button>
                                 </div>
@@ -116,35 +116,9 @@
                     </li>";
 			
 	}
-	echo "</li></ul></div><div>";				
+	echo "</ul></div></div>";				
 
-	/*echo $cadaProduto['idproduto']." - "
-				.$cadaProduto['nome']. " - "
-				.$cadaProduto['quantidade']." - "
-				.$cadaProduto['preco'].
-				"<table>".
-				"<tr>".
-				"<td>".
-				"<form name='productDetailForm' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">".
-						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
-    					"<input type=submit value=\"Detalhar\">".
-    			"</form>".
-    			"</td>".
-    			"<td>".
-				"<form name='productEditForm' method=post action=\"../../../controller/produto/visualiza_informacoes_produto.php\">".
-						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
-    					"<input type=submit value=\"Atualizar\">".
-    			"</form>".
-    			"</td>".
-    			"<td>".
-				"<form name='productEditForm' method=post action=\"../../../controller/produto/deleta_produto.php\">".
-						"<input type=text name=\"idproduto\" value=\"".$cadaProduto['idproduto']."\" style=\"display:none;\"/>".
-    					"<input type=submit value=\"Apagar\">".
-    			"</form>".
-    			"</td>".
-    			"</tr>".
-    			"</table>";*/
-
+	
 	//Comprados
 	echo 
  	"<div class=\"container\">
@@ -159,12 +133,12 @@
                             <div class=\"col-xs-2 col-md-1\">
                                 <img src=\"http://placehold.it/80\" class=\"img-circle img-responsive\" alt=\"\" /></div>
                             <div class=\"col-xs-10 col-md-11\">
-                                <div><h4>"                                    
+                                <h4>"                                    
                                     .$cadaProduto['nome'].
                                     "</h4><div class=\"mic-info\">
                                         Cadastrado em: ".$cadaProduto['datainicio']."
                                     </div>
-                                </div>
+                                
                                 <div class=\"comment-text\">
                                     Quantidade:".$cadaProduto['quantidade']."
                                 </div>
@@ -192,7 +166,7 @@
                     </li>";
 			
 	}
-	echo "</li></ul></div><div>";	
+	echo "</ul></div></div>";	
 ?>
 </body>
 </html>
