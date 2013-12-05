@@ -1,9 +1,4 @@
-
-//documentReady da view principal
-$(document).ready(function(){
-
-	
-	function isEmailFormatValid(email){
+function isEmailFormatValid(email){
 		var $email = email;
 		var expEmail= new RegExp("...@...\..."); //email valido: no minimo 3caracteres antes de um arroba seguido por mais 3 caracteres, um '.'(\.) e mais 2 chars		
 		var expEmail2 = /[^A-Za-z@\.0-9]/g; //email valido: sem caracteres invalidos
@@ -24,8 +19,7 @@ $(document).ready(function(){
 		
 	}
 
-
-	function submitLoginFormWithAjax(destUrl,formObject){
+function submitLoginFormWithAjax(destUrl,formObject){
 		
 		
 		var email = $('#loginform #login').get(0).value; //obtem o Value pelo DOM(get(0))
@@ -75,9 +69,13 @@ $(document).ready(function(){
 
 		
 	}
-	
 
 
+
+
+
+//documentReady da view principal
+$(document).ready(function(){
 
 	/*--- submit button, seguindo recomendacoes da documentacao da jquery -----*/
 	var $loginForm = $("#loginform");		
@@ -87,5 +85,9 @@ $(document).ready(function(){
 		
 	});
 
-
 });
+
+function minhaFuncao(){
+		alert('asd');
+
+}

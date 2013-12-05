@@ -77,7 +77,7 @@
  		echo "<li class=\"list-group-item\">
                         <div class=\"row\">
                             <div class=\"col-xs-2 col-md-1\">
-                                <img src=\"http://placehold.it/80\" class=\"img-circle img-responsive\" alt=\"\" /></div>
+                                <img src=\"".(($cadaProduto['linkfoto']=='')?'../../img/semfoto.png':$cadaProduto['linkfoto'])."\" class=\"img-circle img-responsive\" alt=\"\" /></div>
                             <div class=\"col-xs-10 col-md-11\">
                                 <h4>"                                    
                                     .$cadaProduto['nome'].

@@ -35,7 +35,7 @@ include($CONTROLLERPATH.'/session/restrict/restrictPageHeader.php');
                       <li class=\"divider\"></li>
                       <li><a href=\"http://localhost/lojavirtual/view/usuario/configuracoes/\">Configurações</a></li> 
                       <li class=\"divider\"></li>
-                      <li><a href=\"http://localhost/lojavirtual/view/usuario/logout/\">Sair</a></li>
+                      <li><a href=\""."http://".$_SERVER['HTTP_HOST']."/lojavirtual/view/usuario/logout/\">Sair</a></li>
                     </ul>
                   </li>
                 </ul>
