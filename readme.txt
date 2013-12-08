@@ -19,7 +19,7 @@ CARACTERÍSTICAS:
 PRÉ-REQUISITOS:
 * Servidor Web Apache 2.x (ou superior)
 * Servidor de Banco de Dados MySQL 5.5.x (ou superior)
-* PHP 5.4.x (ou superior) com suporte à MySQL e DBO
+* PHP 5.4.x (ou superior) com suporte à MySQL e PDB
 
 CONFIGURAÇÃO DA BASE DE DADOS
 * Os modelos e o script de criação da base então na pasta "db/"
